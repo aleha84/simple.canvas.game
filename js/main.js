@@ -66,6 +66,7 @@ $(document).ready(function(){
 });
 
 $(document).on('mousemove touchmove','#battlefield',function(e){
+	absorbTouchEvent();
 	var posX = $(this).offset().left, posY = $(this).offset().top;
 	var eventPos = pointerEventToXY(e);
 	mousestate.position = new Vector2(eventPos.x - posX,eventPos.y - posY);
@@ -94,16 +95,19 @@ $(document).on('mousemove touchmove','#battlefield',function(e){
 });
 
 $(document).on('mouseout touchleave','#battlefield',function(){
+	absorbTouchEvent();
 	mousestate.leftButtonDown = false;
 });
 
 $(document).on('mousedown touchstart','#battlefield',function(){
+	absorbTouchEvent();
 	mousestate.leftButtonDown = true;
 });
 
 $(document).on('mouseup touchend','#battlefield',function(){
 	//var posX = $(this).offset().left, posY = $(this).offset().top;
 	//var target = new Vector2(e.pageX - posX,e.pageY - posY);
+	absorbTouchEvent();
 	mousestate.leftButtonDown = false;
 	shooters[0].spread.currentSpread = 0;
 });

@@ -77,3 +77,15 @@ var pointerEventToXY = function(e){
   }
   return out;
 };
+
+function absorbTouchEvent(event) {
+	if(event.type == 'touchstart' || event.type == 'touchmove' || event.type == 'touchend' || event.type == 'touchcancel'){
+		var e = event || window.event;
+		e.preventDefault && e.preventDefault();
+		e.stopPropagation && e.stopPropagation();
+		e.cancelBubble = true;
+		e.returnValue = false;
+		return false;		
+	}
+  
+}
