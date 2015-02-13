@@ -23,7 +23,9 @@ var src = {
 	enemyImage: 'content/soldier.png',
 	soldierRemains: 'content/soldierremains.png',
 	background: 'content/bg.jpg',
-	tank: 'content/tank.png'
+	tank: 'content/tank.png',
+	tankRemains: 'content/tankremains.png',
+	explosion: 'content/explosion.png'
 };
 var images = {
 }
@@ -153,19 +155,6 @@ function draw(){
 		go[i].render();
 		if(!go[i].alive){
 			var deleted = go.splice(i,1);
-			if(deleted.length == 1 ){
-				if(deleted[0] instanceof EnemyTank){
-					gameLogics.enemies.tanks.currentAmount--;
-					for(var i = 0;i<5;i++){
-						go.push(new Enemy({position:new Vector2(getRandom(deleted[0].position.x-15,deleted[0].position.x+15),getRandom(deleted[0].position.y-15,deleted[0].position.y+15)),direction:new Vector2(0,1)}))
-						gameLogics.enemies.soldier.currentAmount++;
-					}
-				}
-				else if(deleted[0] instanceof Enemy)
-				{
-					gameLogics.enemies.soldier.currentAmount--;
-				}
-			}
 		}
 	}
 
