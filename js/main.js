@@ -65,7 +65,7 @@ $(document).ready(function(){
 */	
 });
 
-$(document).on('mousemove','#battlefield',function(e){
+$(document).on('mousemove touchmove','#battlefield',function(e){
 	var posX = $(this).offset().left, posY = $(this).offset().top;
 	mousestate.position = new Vector2(e.pageX - posX,e.pageY - posY);
 
@@ -92,15 +92,15 @@ $(document).on('mousemove','#battlefield',function(e){
 
 });
 
-$(document).on('mouseout','#battlefield',function(){
+$(document).on('mouseout touchleave','#battlefield',function(){
 	mousestate.leftButtonDown = false;
 });
 
-$(document).on('mousedown','#battlefield',function(){
+$(document).on('mousedown touchstart','#battlefield',function(){
 	mousestate.leftButtonDown = true;
 });
 
-$(document).on('mouseup','#battlefield',function(){
+$(document).on('mouseup touchend','#battlefield',function(){
 	//var posX = $(this).offset().left, posY = $(this).offset().top;
 	//var target = new Vector2(e.pageX - posX,e.pageY - posY);
 	mousestate.leftButtonDown = false;
