@@ -67,7 +67,8 @@ $(document).ready(function(){
 
 $(document).on('mousemove touchmove','#battlefield',function(e){
 	var posX = $(this).offset().left, posY = $(this).offset().top;
-	mousestate.position = new Vector2(e.pageX - posX,e.pageY - posY);
+	var eventPos = pointerEventToXY(e);
+	mousestate.position = new Vector2(eventPos.x - posX,eventPos.y - posY);
 
 	var mouseVector = new Vector2(mousestate.position.x - shooters[0].position.x, mousestate.position.y - shooters[0].position.y);
 	mousestate.mouseVector = mouseVector;
