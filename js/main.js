@@ -66,7 +66,7 @@ $(document).ready(function(){
 });
 
 $(document).on('mousemove touchmove','#battlefield',function(e){
-	absorbTouchEvent();
+	absorbTouchEvent(e);
 	var posX = $(this).offset().left, posY = $(this).offset().top;
 	var eventPos = pointerEventToXY(e);
 	mousestate.position = new Vector2(eventPos.x - posX,eventPos.y - posY);
@@ -94,20 +94,20 @@ $(document).on('mousemove touchmove','#battlefield',function(e){
 
 });
 
-$(document).on('mouseout touchleave','#battlefield',function(){
-	absorbTouchEvent();
+$(document).on('mouseout touchleave','#battlefield',function(e){
+	absorbTouchEvent(e);
 	mousestate.leftButtonDown = false;
 });
 
-$(document).on('mousedown touchstart','#battlefield',function(){
-	absorbTouchEvent();
+$(document).on('mousedown touchstart','#battlefield',function(e){
+	absorbTouchEvent(e);
 	mousestate.leftButtonDown = true;
 });
 
-$(document).on('mouseup touchend','#battlefield',function(){
+$(document).on('mouseup touchend','#battlefield',function(e){
 	//var posX = $(this).offset().left, posY = $(this).offset().top;
 	//var target = new Vector2(e.pageX - posX,e.pageY - posY);
-	absorbTouchEvent();
+	absorbTouchEvent(e);
 	mousestate.leftButtonDown = false;
 	shooters[0].spread.currentSpread = 0;
 });
