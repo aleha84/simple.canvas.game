@@ -1,0 +1,18 @@
+body {
+    margin: 0px;
+    padding: 0px;
+  }
+
+#battlefield {
+	 cursor: url(../content/aim.png) 16 16, auto;
+}
+
+.scores 
+{
+	padding: 5px;
+}
+
+.scores > .soldiers
+{
+	font-weight: bold;
+}
