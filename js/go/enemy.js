@@ -2,7 +2,7 @@ var Enemy = function(enemyProperties){
 	GO.call(this);
 	this.id = 'enemy' + (Enemy.counter++);
 	this.radius = 12;
-	this.speed = 1;
+	this.speed = 0.5;
 	this.health = 1;
 	this.direction = enemyProperties.direction;
 	this.position = enemyProperties.position;
@@ -20,12 +20,14 @@ var Enemy = function(enemyProperties){
 		this.health-=hitPower;
 		if(this.health <= 0)
 		{
-			this.alive = false;
+			this.setDead();
+			//this.alive = false;
 			scores.soldiers.count++;
 			go.push(new Remains({position: new Vector2(this.position.x,this.position.y)}));
-			gameLogics.enemies.soldier.currentAmount--;
+			//gameLogics.enemies.soldier.currentAmount--;
 		}
 	}
+
 }
 Enemy.counter = 0;
 Enemy.prototype = Object.create(GO.prototype);
@@ -49,25 +51,25 @@ Enemy.prototype.render = function(){
 Enemy.prototype.update = function(){
 	delete gameLogics.enemies.placed[this.id];
 	if(this.position.x <= 0 || this.position.y <= 0 || this.position.x > battlefield.width || this.position.y > battlefield.height){
-		this.alive = false;
+		this.setDead();
 	}
 
 	if(!this.alive){
 		return false;
 	}
 	
-	if(!this.destination && this.position.x < battlefield.height - 20){
+	if(!this.destination && this.position.y < battlefield.height - 20){
 		this.getRandomDestination();
-		this.position.add(this.direction.mul(this.speed));
+		//this.position.add(this.direction.mul(this.speed));
 	}
 
 		
-	if(this.position.distance(this.destination) < 10){
+	if(this.destination && this.position.distance(this.destination) < 10){
 		this.destination = undefined;
 	}
-	else{
-		this.position.add(this.direction.mul(this.speed));
-	}
+	
+	this.position.add(this.direction.mul(this.speed));
+	
 
 	gameLogics.enemies.placed[this.id] = this;
 }

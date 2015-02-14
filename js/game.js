@@ -9,7 +9,7 @@ var gameLogics = {
 	enemies: {
 		soldier: {
 			currentAmount: 0,
-			maxAmount: 0
+			maxAmount: 10
 		},
 		tanks: {
 			currentAmount: 0,
@@ -23,6 +23,18 @@ var gameLogics = {
 var GO = function(){
 	this.position = new Vector2;
 	this.alive = true;
+	this.id = '';
+	this.setDead = function() {
+		delete gameLogics.enemies.placed[this.id];
+		this.alive = false;
+		if(this instanceof EnemyTank){
+			gameLogics.enemies.tanks.currentAmount--;	
+		}
+		else if(this instanceof Enemy){
+			gameLogics.enemies.soldier.currentAmount--;	
+		}	
+		
+	}
 }
 
 GO.prototype.isAlive = function(){ return this.alive;}

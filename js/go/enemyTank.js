@@ -10,29 +10,18 @@ var EnemyTank = function(enemyTankProperties){
 	// this.lastTimeFrameChange = new Date;
 	this.currentFrame = 0;
 
-	this.hitted = function(hitPower, hitPosition){
+	this.hitted = function(hitPower){
 		this.health-=hitPower;
-
-		go.unshift(new Animated({	
-			totalFrameCount: 81,
-			framesInRow: 9,
-			framesRowsCount: 9,
-			frameChangeDelay: 6,
-			explosionImageType: 1,
-			destinationFrameSize: new Vector2(10,10),
-			sourceFrameSize: new Vector2(100,100),
-			position: hitPosition
-		}));
 
 		if(this.health <= 0)
 		{
-			delete gameLogics.enemies.placed[this.id];
-			this.alive = false;
+			this.setDead();
+			//this.alive = false;
 			scores.soldiers.count++;
-			gameLogics.enemies.tanks.currentAmount--;
+			//gameLogics.enemies.tanks.currentAmount--;
 			go.push(new TankRemains({position: new Vector2(this.position.x,this.position.y)}));
 			for(var i = 0;i<5;i++){
-				go.push(new Enemy({position:new Vector2(getRandom(this.position.x-15,this.position.x+15),getRandom(this.position.y-15,this.position.y+15)),direction:new Vector2(0,1)}))
+				go.push(new Enemy({position:new Vector2(getRandom(this.position.x-25,this.position.x+25),getRandom(this.position.y-25,this.position.y+25)),direction:new Vector2(getRandom(-1,1),getRandom(0,1))}))
 				gameLogics.enemies.soldier.currentAmount++;
 			}
 		}
@@ -53,25 +42,26 @@ EnemyTank.prototype.render = function(){
 EnemyTank.prototype.update = function(){
 	delete gameLogics.enemies.placed[this.id];
 	if(this.position.x <= 0 || this.position.y <= 0 || this.position.x > battlefield.width || this.position.y > battlefield.height){
-		this.alive = false;
+		//this.alive = false;
+		this.setDead();
 	}
 
 	if(!this.alive){
 		return false;
 	}
 	
-	if(!this.destination && this.position.x < battlefield.height - 20){
+	if(!this.destination && this.position.y < battlefield.height - 20){
 		this.getRandomDestination();
-		this.position.add(this.direction.mul(this.speed));
+		//this.position.add(this.direction.mul(this.speed));
 	}
 
 		
-	if(this.position.distance(this.destination) < 10){
+	if(this.destination && this.position.distance(this.destination) < 10){
 		this.destination = undefined;
 	}
-	else{
-		this.position.add(this.direction.mul(this.speed));
-	}
+	//else{
+	this.position.add(this.direction.mul(this.speed));
+	//}
 
 	this.currentFrame = 0;
 

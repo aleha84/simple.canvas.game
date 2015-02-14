@@ -35,7 +35,19 @@ Shot.prototype.update = function(){
 	        var distance = this.position.distance(gameLogics.enemies.placed[_go].position);
 			if(distance!=undefined && distance  <= gameLogics.enemies.placed[_go].radius){
 				this.alive = false;
-				gameLogics.enemies.placed[_go].hitted(this.hitPower, new Vector2(this.position.x, this.position.y));
+
+				go.unshift(new Animated({	
+					totalFrameCount: 81,
+					framesInRow: 9,
+					framesRowsCount: 9,
+					frameChangeDelay: 6,
+					explosionImageType: 1,
+					destinationFrameSize: new Vector2(10,10),
+					sourceFrameSize: new Vector2(100,100),
+					position: new Vector2(this.position.x, this.position.y)
+				}));
+
+				gameLogics.enemies.placed[_go].hitted(this.hitPower);
 				break;
 				/*gameLogics.enemies.placed[_go].health-=this.hitPower;
 				if(gameLogics.enemies.placed[_go].health <= 0)
