@@ -48,7 +48,8 @@ var shooters = [
 		spread : {
 			spreadIncreaseDate: new Date,
 			spreadIncreaseDelay: 100,
-			currentSpread: 0
+			currentSpread: 0,
+			maxSpread: 400
 		}
 	}
 ];
@@ -101,6 +102,10 @@ Remains.prototype.update = function(){
 	var alpha = 1 - ((now - this.createDate)/this.timeToShow);
 	if(alpha > 1){ alpha = 1;}
 	this.alpha = alpha;
+
+	if(this.remainsType ==1){
+		this.position.y-=0.1;
+	}
 }
 
 var TankRemains = function(remainsProperty){

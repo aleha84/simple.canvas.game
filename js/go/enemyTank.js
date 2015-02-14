@@ -4,6 +4,7 @@ var EnemyTank = function(enemyTankProperties){
 	this.radius = 20;
 	this.speed = 0.25;
 	this.health = 10;
+	this.maxHealth = 10;
 	//this.direction = enemyTankProperties.direction;
 	//this.position = enemyTankProperties.position;
 	// this.frameChangeRate = 300;
@@ -15,10 +16,20 @@ var EnemyTank = function(enemyTankProperties){
 
 		if(this.health <= 0)
 		{
+
+			go.unshift(new Animated({	
+				totalFrameCount: 81,
+				framesInRow: 9,
+				framesRowsCount: 9,
+				frameChangeDelay: 6,
+				explosionImageType: 1,
+				destinationFrameSize: new Vector2(40,40),
+				sourceFrameSize: new Vector2(100,100),
+				position: new Vector2(this.position.x, this.position.y)
+			}));
+
 			this.setDead();
-			//this.alive = false;
-			scores.soldiers.count++;
-			//gameLogics.enemies.tanks.currentAmount--;
+			scores.tanks.count++;
 			go.push(new TankRemains({position: new Vector2(this.position.x,this.position.y)}));
 			for(var i = 0;i<5;i++){
 				go.push(new Enemy({position:new Vector2(getRandom(this.position.x-25,this.position.x+25),getRandom(this.position.y-25,this.position.y+25)),direction:new Vector2(getRandom(-1,1),getRandom(0,1))}))
@@ -37,6 +48,27 @@ EnemyTank.prototype.render = function(){
 
 	//context.drawImage(images.tank, this.position.x - this.radius, this.position.y - this.radius);
 	context.drawImage(images.tank, 0,this.currentFrame*50,50,50,this.position.x - this.radius, this.position.y - this.radius,40,40);
+
+	//draw health bar
+	var healthRate = this.health / this.maxHealth;
+	var healthBarLength = healthRate * this.radius*2;
+	var healthBarColor = '#00FF00';
+	context.beginPath();
+	context.lineWidth = 3;
+	if(healthRate >= 1){
+		healthBarColor = 'lightgreen';
+	}
+	else if(healthRate >= 0.5 && healthRate < 1){
+		healthBarColor = 'orange';
+	}
+	else
+	{
+		healthBarColor = 'red';
+	}
+	context.strokeStyle = healthBarColor;
+    context.moveTo(this.position.x - this.radius, this.position.y - this.radius);
+    context.lineTo(this.position.x  - this.radius + healthBarLength, this.position.y - this.radius);
+	context.stroke();	
 }
 
 EnemyTank.prototype.update = function(){

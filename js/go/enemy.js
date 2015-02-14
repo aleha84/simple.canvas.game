@@ -11,7 +11,7 @@ var Enemy = function(enemyProperties){
 	this.getRandomDestination = function(){
 		var now = new Date;
 		if(now - this.lastTimeGetRandomDestination > gameLogics.getRandomDestinationDelay){
-			this.destination = getRandomDestination({min:this.position.y,max:battlefield.height},{min:12,max:battlefield.width-12})
+			this.destination = getRandomDestination({min:this.position.y,max:battlefield.height + 20},{min:12,max:battlefield.width-12})
 			this.direction = this.position.direction(this.destination);	
 			this.lastTimeGetRandomDestination = now;
 		}

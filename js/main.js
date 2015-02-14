@@ -41,6 +41,10 @@ $(document).ready(function(){
 		soldiers: {
 			count: 0,
 			el: $(".scores>.soldiers")	
+		},
+		tanks: {
+			count: 0,
+			el: $(".scores>.tanks")	
 		}
 	}
 
@@ -119,6 +123,9 @@ function draw(){
 			if(now - shooters[i].spread.spreadIncreaseDate > shooters[i].spread.spreadIncreaseDelay){
 				shooters[i].spread.spreadIncreaseDate = now;
 				shooters[i].spread.currentSpread +=10;
+				if(shooters[i].spread.currentSpread > shooters[i].spread.maxSpread){
+					shooters[i].spread.currentSpread  = shooters[i].spread.maxSpread; 
+				}
 			}
 
 
@@ -164,6 +171,7 @@ function draw(){
 	}
 
 	scores.soldiers.el.html(scores.soldiers.count);
+	scores.tanks.el.html(scores.tanks.count);
 	$('#debug').html('shots.length = ' + go.length + '<br/>' + 'mousestate: ' + JSON.stringify(mousestate) + '<br/> shooter angle: ' + shooters[0].angle);
 
 }
