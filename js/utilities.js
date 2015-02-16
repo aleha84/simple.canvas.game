@@ -9,7 +9,7 @@ function Vector2(x,y){
 	this.y = y;
 
 	this.distance = function(to){
-		if(!to || !to instanceof Vector2){
+		if(!to || !(to instanceof Vector2)){
 			return undefined;
 		}
 
@@ -17,7 +17,7 @@ function Vector2(x,y){
 	}
 
 	this.direction = function(to){
-		if(!to || !to instanceof Vector2){
+		if(!to || !(to instanceof Vector2)){
 			return new Vector2()
 		}
 
@@ -47,7 +47,7 @@ function Vector2(x,y){
 	}
 
 	this.mulVector = function(to){
-		if(!to || !to instanceof Vector2){
+		if(!to || !(to instanceof Vector2)){
 			return 0;
 		}
 

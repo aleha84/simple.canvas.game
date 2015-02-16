@@ -15,7 +15,12 @@ var gameLogics = {
 			currentAmount: 0,
 			maxAmount: 1	
 		},
-		placed: {}
+		robots: {
+			currentAmount: 0,
+			maxAmount: 1	
+		},
+		placed: {},
+		healthModifier: 1
 	},
 	getRandomDestinationDelay: 1000
 }
@@ -29,6 +34,9 @@ var GO = function(){
 		this.alive = false;
 		if(this instanceof EnemyTank){
 			gameLogics.enemies.tanks.currentAmount--;	
+		}
+		else if(this instanceof EnemyRobot){
+			gameLogics.enemies.robots.currentAmount--;	
 		}
 		else if(this instanceof Enemy){
 			gameLogics.enemies.soldier.currentAmount--;	

@@ -25,7 +25,8 @@ var src = {
 	background: 'content/bg.jpg',
 	tank: 'content/tank.png',
 	tankRemains: 'content/tankremains.png',
-	explosion: 'content/explosion.png'
+	explosion: 'content/explosion.png',
+	robot: 'content/robot.png'
 };
 var images = {
 }
@@ -45,6 +46,10 @@ $(document).ready(function(){
 		tanks: {
 			count: 0,
 			el: $(".scores>.tanks")	
+		},
+		robots: {
+			count: 0,
+			el: $(".scores>.robots")		
 		}
 	}
 
@@ -88,7 +93,7 @@ $(document).on('mousemove touchmove','#battlefield',function(e){
 	for (var _go in gameLogics.enemies.placed) {
 	    if (gameLogics.enemies.placed.hasOwnProperty(_go)) {
 	        var distance = mousestate.position.distance(gameLogics.enemies.placed[_go].position);
-			if(distance!=undefined && distance  <= gameLogics.enemies.placed[_go].radius){
+			if(distance!=undefined && distance  <= gameLogics.enemies.placed[_go].radius && !(gameLogics.enemies.placed[_go] instanceof EnemyRobot)){
 				gameLogics.enemies.placed[_go].getRandomDestination();	
 				break;
 			}
@@ -155,6 +160,12 @@ function draw(){
 	if(gameLogics.enemies.tanks.currentAmount < gameLogics.enemies.tanks.maxAmount){
 		go.push(new EnemyTank({position:new Vector2(getRandom(18,battlefield.width-18),10),direction:new Vector2(0,1)}));
 		gameLogics.enemies.tanks.currentAmount++;
+	}
+
+	if(gameLogics.enemies.robots.currentAmount < gameLogics.enemies.robots.maxAmount){
+		var robotPosition = new Vector2(getRandom(18,battlefield.width-18),10);
+		go.push(new EnemyRobot({position: robotPosition, destination: new Vector2(robotPosition.x, getRandom(10,battlefield.height / 4)),direction:new Vector2(0,1)}));
+		gameLogics.enemies.robots.currentAmount++;
 	}
 
 	context.drawImage(images.background,0,0,battlefield.width,battlefield.height);

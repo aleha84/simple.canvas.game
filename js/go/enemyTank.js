@@ -3,8 +3,8 @@ var EnemyTank = function(enemyTankProperties){
 	this.id = 'enemyTank' + (EnemyTank.counter++);
 	this.radius = 20;
 	this.speed = 0.25;
-	this.health = 10;
-	this.maxHealth = 10;
+	this.health = 10*gameLogics.enemies.healthModifier;
+	this.maxHealth = 10*gameLogics.enemies.healthModifier;
 	//this.direction = enemyTankProperties.direction;
 	//this.position = enemyTankProperties.position;
 	// this.frameChangeRate = 300;
@@ -45,30 +45,8 @@ EnemyTank.prototype.render = function(){
 	if(!this.alive){
 		return false;
 	}
-
-	//context.drawImage(images.tank, this.position.x - this.radius, this.position.y - this.radius);
 	context.drawImage(images.tank, 0,this.currentFrame*50,50,50,this.position.x - this.radius, this.position.y - this.radius,40,40);
-
-	//draw health bar
-	var healthRate = this.health / this.maxHealth;
-	var healthBarLength = healthRate * this.radius*2;
-	var healthBarColor = '#00FF00';
-	context.beginPath();
-	context.lineWidth = 3;
-	if(healthRate >= 1){
-		healthBarColor = 'lightgreen';
-	}
-	else if(healthRate >= 0.5 && healthRate < 1){
-		healthBarColor = 'orange';
-	}
-	else
-	{
-		healthBarColor = 'red';
-	}
-	context.strokeStyle = healthBarColor;
-    context.moveTo(this.position.x - this.radius, this.position.y - this.radius);
-    context.lineTo(this.position.x  - this.radius + healthBarLength, this.position.y - this.radius);
-	context.stroke();	
+	this.drawHealthBar();	
 }
 
 EnemyTank.prototype.update = function(){

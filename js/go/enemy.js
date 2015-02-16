@@ -3,7 +3,8 @@ var Enemy = function(enemyProperties){
 	this.id = 'enemy' + (Enemy.counter++);
 	this.radius = 12;
 	this.speed = 0.5;
-	this.health = 1;
+	this.health = 1*gameLogics.enemies.healthModifier;
+	this.maxHealth = 1*gameLogics.enemies.healthModifier;
 	this.direction = enemyProperties.direction;
 	this.position = enemyProperties.position;
 	this.destination = undefined;
@@ -27,6 +28,28 @@ var Enemy = function(enemyProperties){
 			//gameLogics.enemies.soldier.currentAmount--;
 		}
 	}
+	this.drawHealthBar = function(){
+		//draw health bar
+		var healthRate = this.health / this.maxHealth;
+		var healthBarLength = healthRate * this.radius*2;
+		var healthBarColor = '#00FF00';
+		context.beginPath();
+		context.lineWidth = 3;
+		if(healthRate >= 1){
+			healthBarColor = 'lightgreen';
+		}
+		else if(healthRate >= 0.5 && healthRate < 1){
+			healthBarColor = 'orange';
+		}
+		else
+		{
+			healthBarColor = 'red';
+		}
+		context.strokeStyle = healthBarColor;
+	    context.moveTo(this.position.x - this.radius, this.position.y - this.radius);
+	    context.lineTo(this.position.x  - this.radius + healthBarLength, this.position.y - this.radius);
+		context.stroke();	
+	}
 
 }
 Enemy.counter = 0;
@@ -47,6 +70,7 @@ Enemy.prototype.render = function(){
 	
 
 	context.drawImage(images.enemyImage, this.position.x - this.radius, this.position.y - this.radius);
+	this.drawHealthBar();
 }
 Enemy.prototype.update = function(){
 	delete gameLogics.enemies.placed[this.id];
