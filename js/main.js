@@ -26,7 +26,8 @@ var src = {
 	tank: 'content/tank.png',
 	tankRemains: 'content/tankremains.png',
 	explosion: 'content/explosion.png',
-	robot: 'content/robot.png'
+	robot: 'content/robot.png',
+	missile: 'content/missile.png'
 };
 var images = {
 }
@@ -41,15 +42,22 @@ $(document).ready(function(){
 	scores = {
 		soldiers: {
 			count: 0,
-			el: $(".scores>.soldiers")	
+			el: $(".scores>.soldiers>.count")	
 		},
 		tanks: {
 			count: 0,
-			el: $(".scores>.tanks")	
+			el: $(".scores>.tanks>.count")	
 		},
 		robots: {
 			count: 0,
-			el: $(".scores>.robots")		
+			el: $(".scores>.robots>.count")		
+		},
+		total: {
+			count: 0,
+			el: $(".scores>.total>.count")		
+		},
+		difficulty: {
+			levelEl: $(".scores>.level>.amount")
 		}
 	}
 
@@ -164,7 +172,7 @@ function draw(){
 
 	if(gameLogics.enemies.robots.currentAmount < gameLogics.enemies.robots.maxAmount){
 		var robotPosition = new Vector2(getRandom(18,battlefield.width-18),10);
-		go.push(new EnemyRobot({position: robotPosition, destination: new Vector2(robotPosition.x, getRandom(10,battlefield.height / 4)),direction:new Vector2(0,1)}));
+		go.push(new EnemyRobot({position: robotPosition, destination: new Vector2(robotPosition.x, getRandom(battlefield.height / 8,battlefield.height / 4)),direction:new Vector2(0,1)}));
 		gameLogics.enemies.robots.currentAmount++;
 	}
 
@@ -181,10 +189,30 @@ function draw(){
 		}
 	}
 
+	if(scores.soldiers.count > 0 && !scores.soldiers.el.is(":visible"))
+	{
+		scores.soldiers.el.parent().show();	
+	}
 	scores.soldiers.el.html(scores.soldiers.count);
+	if(scores.tanks.count > 0 && !scores.tanks.el.is(":visible"))
+	{
+		scores.tanks.el.parent().show();	
+	}
 	scores.tanks.el.html(scores.tanks.count);
+	if(scores.robots.count > 0 && !scores.robots.el.is(":visible"))
+	{
+		scores.robots.el.parent().show();	
+	}
+	scores.robots.el.html(scores.robots.count);
+
+	scores.total.el.html(scores.total.count);
 	$('#debug').html('shots.length = ' + go.length + '<br/>' + 'mousestate: ' + JSON.stringify(mousestate) + '<br/> shooter angle: ' + shooters[0].angle);
 
+	if(scores.total.count > gameLogics.difficulty.nextLevelScores){
+		gameLogics.nextLevel();
+	}
+
+	scores.difficulty.levelEl.html(gameLogics.difficulty.level);
 }
 
 function loadImages(sources, callback) {

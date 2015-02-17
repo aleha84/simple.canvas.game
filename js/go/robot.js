@@ -2,10 +2,26 @@ var EnemyRobot = function(enemyRobotProperties){
 	Enemy.call(this,enemyRobotProperties);
 	this.id = 'enemyRobot' + (EnemyRobot.counter++);
 	this.radius = 16;
-	this.speed = 0.15;
-	this.health = 20*gameLogics.enemies.healthModifier;
-	this.maxHealth = 20*gameLogics.enemies.healthModifier;
+	this.speed = 0.15*gameLogics.difficulty.speedModifier;
+	this.health = 20*gameLogics.difficulty.healthModifier;
+	this.maxHealth = 20*gameLogics.difficulty.healthModifier;
 	this.destination = enemyRobotProperties.destination;
+	this.lastTimeMissleLaunch = new Date;
+	this.missleLaunchDelay = 8000;
+	this.scores = 75;
+	this.lauchMissle = function(){
+		var now = new Date;
+		if(now - this.lastTimeMissleLaunch > this.missleLaunchDelay)
+		{
+			this.lastTimeMissleLaunch = now;
+			go.push(
+				new Missile({
+					position: new Vector2(this.position.x, this.position.y),
+					destination: new Vector2(getRandom(15,battlefield.width - 15),battlefield.height + 20)
+				})
+			);
+		}
+	}
 	this.hitted = function(hitPower){
 		this.health-=hitPower;
 
@@ -25,7 +41,7 @@ var EnemyRobot = function(enemyRobotProperties){
 
 			this.setDead();
 			scores.robots.count++;
-			
+			scores.total.count+=this.scores;
 		}
 	}
 }
@@ -61,6 +77,11 @@ EnemyRobot.prototype.update = function(){
 		this.direction = new Vector2;
 		this.speed = 0;
 	}
+
+	if(!this.destination){
+		this.lauchMissle();
+	}
+
 	this.position.add(this.direction.mul(this.speed));
 
 	gameLogics.enemies.placed[this.id] = this;

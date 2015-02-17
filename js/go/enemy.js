@@ -2,13 +2,14 @@ var Enemy = function(enemyProperties){
 	GO.call(this);
 	this.id = 'enemy' + (Enemy.counter++);
 	this.radius = 12;
-	this.speed = 0.5;
-	this.health = 1*gameLogics.enemies.healthModifier;
-	this.maxHealth = 1*gameLogics.enemies.healthModifier;
+	this.speed = 0.5*gameLogics.difficulty.speedModifier;
+	this.health = 1*gameLogics.difficulty.healthModifier;
+	this.maxHealth = 1*gameLogics.difficulty.healthModifier;
 	this.direction = enemyProperties.direction;
 	this.position = enemyProperties.position;
 	this.destination = undefined;
 	this.lastTimeGetRandomDestination = (new Date - 2000);
+	this.scores = 5;
 	this.getRandomDestination = function(){
 		var now = new Date;
 		if(now - this.lastTimeGetRandomDestination > gameLogics.getRandomDestinationDelay){
@@ -24,6 +25,7 @@ var Enemy = function(enemyProperties){
 			this.setDead();
 			//this.alive = false;
 			scores.soldiers.count++;
+			scores.total.count+=this.scores;
 			go.push(new Remains({position: new Vector2(this.position.x,this.position.y)}));
 			//gameLogics.enemies.soldier.currentAmount--;
 		}

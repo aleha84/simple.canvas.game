@@ -13,14 +13,38 @@ var gameLogics = {
 		},
 		tanks: {
 			currentAmount: 0,
-			maxAmount: 1	
+			maxAmount: 0	
 		},
 		robots: {
 			currentAmount: 0,
-			maxAmount: 1	
+			maxAmount: -1	
 		},
 		placed: {},
-		healthModifier: 1
+		
+	},
+	difficulty:{
+		healthModifier: 1,
+		speedModifier: 1,
+		nextLevelScores: 100,
+		level: 1,
+	},
+	difficultySettings:{
+		healthModifierIncrement: 0.1,
+		speedModifierIncrement: 0.1,
+		maxAmountsIncrement: {
+			soldier: 1,
+			tanks: 0.25,
+			robots: 0.1
+		}
+	},
+	nextLevel: function(){
+		this.difficulty.level++;
+		this.difficulty.nextLevelScores = Math.pow(this.difficulty.level,2)*100;
+		this.difficulty.healthModifier +=this.difficultySettings.healthModifierIncrement;
+		this.difficulty.speedModifier +=this.difficultySettings.speedModifierIncrement;
+		this.enemies.soldier.maxAmount += this.difficultySettings.maxAmountsIncrement.soldier;
+		this.enemies.tanks.maxAmount += this.difficultySettings.maxAmountsIncrement.tanks;
+		this.enemies.robots.maxAmount += this.difficultySettings.maxAmountsIncrement.robots;
 	},
 	getRandomDestinationDelay: 1000
 }

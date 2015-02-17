@@ -18,7 +18,12 @@ body {
 	padding: 5px;
 }
 
-.scores > .soldiers, .scores > .tanks
+.scores 
 {
 	font-weight: bold;
+}
+
+.scores> .total> .count
+{
+    color: red;
 }

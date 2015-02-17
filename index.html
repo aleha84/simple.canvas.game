@@ -8,14 +8,33 @@
     <script type="text/javascript" src='js/go/shot.js'></script>
     <script type="text/javascript" src='js/go/enemy.js'></script>
     <script type="text/javascript" src='js/go/enemyTank.js'></script>
+    <script type="text/javascript" src='js/go/missile.js'></script>
     <script type="text/javascript" src='js/go/robot.js'></script>
     <script type="text/javascript" src='js/go/animated.js'></script>
     <script type="text/javascript" src='js/main.js'></script>
   </head>
   <body>
     <div class='scores'>
-      Soldiers: <span class='soldiers'></span>&nbsp;
-      Tanks: <span class='tanks'></span>
+      <span class='soldiers' style='display:none'>
+        Soldiers:   
+        <span class='count'></span>
+      </span>&nbsp;
+      <span class='tanks' style='display:none'>
+        Tanks:   
+        <span class='count'></span>
+      </span>&nbsp;
+      <span class='robots' style='display:none'>
+        Robots:   
+        <span class='count'></span>
+      </span>
+      <span class='total'>
+        Total:   
+        <span class='count'></span>
+      </span>
+      <span class='level'>
+        Current level:   
+        <span class='amount'></span>
+      </span>
     </div>
     <canvas id="battlefield" width="800" height="600"></canvas>
     <div id='debug'>

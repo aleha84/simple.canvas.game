@@ -2,13 +2,10 @@ var EnemyTank = function(enemyTankProperties){
 	Enemy.call(this,enemyTankProperties);
 	this.id = 'enemyTank' + (EnemyTank.counter++);
 	this.radius = 20;
-	this.speed = 0.25;
-	this.health = 10*gameLogics.enemies.healthModifier;
-	this.maxHealth = 10*gameLogics.enemies.healthModifier;
-	//this.direction = enemyTankProperties.direction;
-	//this.position = enemyTankProperties.position;
-	// this.frameChangeRate = 300;
-	// this.lastTimeFrameChange = new Date;
+	this.speed = 0.25*gameLogics.difficulty.speedModifier;
+	this.health = 10*gameLogics.difficulty.healthModifier;
+	this.maxHealth = 10*gameLogics.difficulty.healthModifier;
+	this.scores = 25;
 	this.currentFrame = 0;
 
 	this.hitted = function(hitPower){
@@ -30,8 +27,10 @@ var EnemyTank = function(enemyTankProperties){
 
 			this.setDead();
 			scores.tanks.count++;
+			scores.total.count+=this.scores;
 			go.push(new TankRemains({position: new Vector2(this.position.x,this.position.y)}));
-			for(var i = 0;i<5;i++){
+			var newEnemyCount = parseInt(getRandom(1,10));
+			for(var i = 0;i<newEnemyCount;i++){
 				go.push(new Enemy({position:new Vector2(getRandom(this.position.x-25,this.position.x+25),getRandom(this.position.y-25,this.position.y+25)),direction:new Vector2(getRandom(-1,1),getRandom(0,1))}))
 				gameLogics.enemies.soldier.currentAmount++;
 			}
