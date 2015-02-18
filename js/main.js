@@ -135,23 +135,22 @@ function draw(){
 		for(var i = 0;i<shooters.length;i++){
 			if(now - shooters[i].spread.spreadIncreaseDate > shooters[i].spread.spreadIncreaseDelay){
 				shooters[i].spread.spreadIncreaseDate = now;
-				shooters[i].spread.currentSpread +=10;
-				if(shooters[i].spread.currentSpread > shooters[i].spread.maxSpread){
-					shooters[i].spread.currentSpread  = shooters[i].spread.maxSpread; 
+				shooters[i].spread.currentSpread +=shooters[i].spread.spreadAngleIncrease;
+				if(shooters[i].spread.currentSpread > shooters[i].spread.maxSpreadAngle){
+					shooters[i].spread.currentSpread  = shooters[i].spread.maxSpreadAngle; 
 				}
 			}
 
 
 			if((now - shooters[i].lastTimeShoot) > shooters[i].shootDelay){
+				var pos = new Vector2(shooters[i].position.x,shooters[i].position.y);
+				var spreadAngle = getRandom(-1*shooters[i].spread.currentSpread,shooters[i].spread.currentSpread);
+				var dir = pos.direction(new Vector2(mousestate.position.x,mousestate.position.y)).rotate(spreadAngle);
+
 				go.push(new Shot(
 					{
-						position:new Vector2(shooters[i].position.x,shooters[i].position.y),
-						direction:shooters[i].position.direction(
-							new Vector2(
-								getRandom(mousestate.position.x-shooters[i].spread.currentSpread,mousestate.position.x+shooters[i].spread.currentSpread),
-								getRandom(mousestate.position.y-shooters[i].spread.currentSpread,mousestate.position.y+shooters[i].spread.currentSpread)
-								)
-						)
+						position:pos,
+						direction:dir
 					}
 				));	
 				shooters[i].lastTimeShoot = now;

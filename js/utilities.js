@@ -53,6 +53,11 @@ function Vector2(x,y){
 
 		return this.x*to.x + this.y*to.y;
 	}
+
+	this.rotate = function(angle){
+		return new Vector2(this.x*Math.cos(angle*Math.PI/180) - this.y* Math.sin(angle*Math.PI/180),
+						   this.x*Math.sin(angle*Math.PI/180) + this.y* Math.cos(angle*Math.PI/180) )
+	}
 }
 
 function getRandomDestination(height, width)

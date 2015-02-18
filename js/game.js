@@ -81,7 +81,9 @@ var shooters = [
 			spreadIncreaseDate: new Date,
 			spreadIncreaseDelay: 100,
 			currentSpread: 0,
-			maxSpread: 400
+			maxSpread: 400,
+			maxSpreadAngle: 45,
+			spreadAngleIncrease: 1
 		}
 	}
 ];
