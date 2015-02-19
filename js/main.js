@@ -129,13 +129,41 @@ $(document).on('mouseup touchend','#battlefield',function(e){
 	shooters[0].spread.currentSpread = 0;
 });
 
+$(document).on('keypress', function(e){
+	if(e.charCode == 32)
+	{
+		gameLogics.isPaused = !gameLogics.isPaused;
+	}
+});
+
+$(document).on('click', '.bafs>div', function(e){
+	var el = $(e.currentTarget);
+	var type = el.attr('type');
+	if(type!=undefined){
+		switch(type){
+			case '1':
+				gameLogics.difficulty.spreadAngleIncreaseModifier *=gameLogics.difficultySettings.spreadAngleIncreaseModifierMultiplier;
+				break;
+			case '2':
+				gameLogics.difficulty.hitPowerModifier+=gameLogics.difficultySettings.hitPowerModifierIncrement;
+				break;
+			case '3':
+				break;
+			default:
+				break;
+		}
+	}
+	$('.bafs').remove();
+	gameLogics.isPaused = false;
+});
+
 function draw(){
 	var now = new Date;
-	if(mousestate.leftButtonDown){
+	if(!gameLogics.isPaused && mousestate.leftButtonDown){
 		for(var i = 0;i<shooters.length;i++){
 			if(now - shooters[i].spread.spreadIncreaseDate > shooters[i].spread.spreadIncreaseDelay){
 				shooters[i].spread.spreadIncreaseDate = now;
-				shooters[i].spread.currentSpread +=shooters[i].spread.spreadAngleIncrease;
+				shooters[i].spread.currentSpread +=gameLogics.difficulty.spreadAngleIncreaseModifier;//shooters[i].spread.spreadAngleIncrease;
 				if(shooters[i].spread.currentSpread > shooters[i].spread.maxSpreadAngle){
 					shooters[i].spread.currentSpread  = shooters[i].spread.maxSpreadAngle; 
 				}
@@ -181,7 +209,10 @@ function draw(){
 	
  	var i = go.length;
 	while (i--) {
-		go[i].update();
+		if(!gameLogics.isPaused)
+		{
+			go[i].update();
+		}
 		go[i].render();
 		if(!go[i].alive){
 			var deleted = go.splice(i,1);

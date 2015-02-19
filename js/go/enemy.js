@@ -2,7 +2,7 @@ var Enemy = function(enemyProperties){
 	GO.call(this);
 	this.id = 'enemy' + (Enemy.counter++);
 	this.radius = 12;
-	this.speed = 0.5*gameLogics.difficulty.speedModifier;
+	this.speed = 0.4*gameLogics.difficulty.speedModifier;
 	this.health = 1*gameLogics.difficulty.healthModifier;
 	this.maxHealth = 1*gameLogics.difficulty.healthModifier;
 	this.direction = enemyProperties.direction;

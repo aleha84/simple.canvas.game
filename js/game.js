@@ -27,8 +27,12 @@ var gameLogics = {
 		speedModifier: 1,
 		nextLevelScores: 100,
 		level: 1,
+		hitPowerModifier: 1,
+		spreadAngleIncreaseModifier: 1,
 	},
 	difficultySettings:{
+		spreadAngleIncreaseModifierMultiplier: 0.75,
+		hitPowerModifierIncrement: 1.5,
 		healthModifierIncrement: 0.1,
 		speedModifierIncrement: 0.1,
 		maxAmountsIncrement: {
@@ -45,8 +49,21 @@ var gameLogics = {
 		this.enemies.soldier.maxAmount += this.difficultySettings.maxAmountsIncrement.soldier;
 		this.enemies.tanks.maxAmount += this.difficultySettings.maxAmountsIncrement.tanks;
 		this.enemies.robots.maxAmount += this.difficultySettings.maxAmountsIncrement.robots;
+		if(this.difficulty.level%3 == 0)
+		{
+			gameLogics.isPaused =true;
+			var $selectBafs = $('<div>', { class: 'bafs', css: {
+				width: battlefield.width + 'px',
+				margin: (battlefield.height /2 - 50) + 'px 0px'
+			}});
+			$selectBafs.append($('<div>',{class: 'scatter',text: 'Lower scatter', type: '1'}));
+			$selectBafs.append($('<div>',{class: 'hitPower',text: 'Higher hit power', type: '2'}));
+			$selectBafs.append($('<div>',{class: 'restoreLife',text: 'Restore life', type: '3'}));
+			$('body').append($selectBafs);
+		}
 	},
-	getRandomDestinationDelay: 1000
+	getRandomDestinationDelay: 1000,
+	isPaused: false,
 }
 
 var GO = function(){
@@ -83,7 +100,7 @@ var shooters = [
 			currentSpread: 0,
 			maxSpread: 400,
 			maxSpreadAngle: 45,
-			spreadAngleIncrease: 1
+			//spreadAngleIncrease: 1*gameLogics.difficulty.spreadAngleIncreaseModifier,
 		}
 	}
 ];

@@ -4,7 +4,7 @@ var Shot = function(shotProperties){
 	this.speed = 10;
 	this.direction = shotProperties.direction;
 	this.position = shotProperties.position;
-	this.hitPower = 1;
+	this.hitPower = 1*gameLogics.difficulty.hitPowerModifier;
 	//this.timeToLive = shotProperties.timeToLive;
 }
 Shot.prototype = Object.create(GO.prototype);
