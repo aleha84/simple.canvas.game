@@ -94,7 +94,7 @@ Enemy.prototype.update = function(){
 		this.destination = undefined;
 	}
 	
-	this.position.add(this.direction.mul(this.speed));
+	this.position.add(this.direction.mul(this.speed*gameLogics.bonuses.speedDecrease.value));
 	
 
 	gameLogics.enemies.placed[this.id] = this;

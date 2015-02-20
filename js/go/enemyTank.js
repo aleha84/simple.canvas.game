@@ -69,7 +69,7 @@ EnemyTank.prototype.update = function(){
 		this.destination = undefined;
 	}
 	//else{
-	this.position.add(this.direction.mul(this.speed));
+	this.position.add(this.direction.mul(this.speed*gameLogics.bonuses.speedDecrease.value));
 	//}
 
 	this.currentFrame = 0;

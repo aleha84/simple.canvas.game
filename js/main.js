@@ -27,7 +27,8 @@ var src = {
 	tankRemains: 'content/tankremains.png',
 	explosion: 'content/explosion.png',
 	robot: 'content/robot.png',
-	missile: 'content/missile.png'
+	missile: 'content/missile.png',
+	ice: 'content/ice.png'
 };
 var images = {
 }
@@ -58,6 +59,13 @@ $(document).ready(function(){
 		},
 		difficulty: {
 			levelEl: $(".scores>.level>.amount")
+		},
+		bonuses: {
+			freeze:{
+				active: false,
+				el: $(".scores>.freeze>.amount")	
+			}
+			
 		}
 	}
 
@@ -134,6 +142,11 @@ $(document).on('keypress', function(e){
 	{
 		gameLogics.isPaused = !gameLogics.isPaused;
 	}
+
+	// if(e.charCode == 98)
+	// {
+		
+	// }
 });
 
 $(document).on('click', '.bafs>div', function(e){
@@ -206,7 +219,28 @@ function draw(){
 	context.drawImage(images.background,0,0,battlefield.width,battlefield.height);
 	// context.fillStyle = 'rgb(245,245,245)';
  // 	context.fillRect( 0, 0, battlefield.width, battlefield.height );
-	
+	var freezeActiveAmount = now - gameLogics.bonuses.speedDecrease.activatedTillTo;
+	scores.bonuses.freeze.active = freezeActiveAmount < 0;
+
+ 	if(scores.bonuses.freeze.active)
+ 	{
+ 		gameLogics.bonuses.speedDecrease.value = 0.1
+ 		if(!scores.bonuses.freeze.el.is(":visible"))
+ 		{
+ 			scores.bonuses.freeze.el.parent().show();	
+ 		}
+ 		scores.bonuses.freeze.el.html(parseInt(freezeActiveAmount/-1000));
+ 	}
+ 	else
+ 	{
+ 		gameLogics.bonuses.speedDecrease.value = gameLogics.bonuses.speedDecrease.defaultValue;
+ 		if(scores.bonuses.freeze.el.is(":visible"))
+ 		{
+	 		scores.bonuses.freeze.el.parent().hide();
+	 	}
+ 	}
+
+
  	var i = go.length;
 	while (i--) {
 		if(!gameLogics.isPaused)

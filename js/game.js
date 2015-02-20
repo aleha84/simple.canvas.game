@@ -41,6 +41,14 @@ var gameLogics = {
 			robots: 0.1
 		}
 	},
+	bonuses: {
+		speedDecrease: {
+			defaultValue: 1,
+			value:1,
+			timeToLive: 5000,
+			activatedTillTo: new Date,
+		},
+	},
 	nextLevel: function(){
 		this.difficulty.level++;
 		this.difficulty.nextLevelScores = Math.pow(this.difficulty.level,2)*100;
@@ -73,16 +81,27 @@ var GO = function(){
 	this.setDead = function() {
 		delete gameLogics.enemies.placed[this.id];
 		this.alive = false;
+		var tryGetBonus = false;
 		if(this instanceof EnemyTank){
 			gameLogics.enemies.tanks.currentAmount--;	
+			tryGetBonus = true;
 		}
 		else if(this instanceof EnemyRobot){
 			gameLogics.enemies.robots.currentAmount--;	
+			tryGetBonus = true;
 		}
 		else if(this instanceof Enemy){
 			gameLogics.enemies.soldier.currentAmount--;	
+			tryGetBonus = true;
 		}	
-		
+		if(tryGetBonus && getRandom(0,40) <= 1)
+		{
+			go.push(new TimeBonus({
+				position: new Vector2(getRandom(15,battlefield.height-15),getRandom(15,battlefield.width)),
+				bonusType: 1,
+				image: images.ice
+			}));
+		}
 	}
 }
 

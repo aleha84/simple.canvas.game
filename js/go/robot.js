@@ -82,7 +82,7 @@ EnemyRobot.prototype.update = function(){
 		this.lauchMissle();
 	}
 
-	this.position.add(this.direction.mul(this.speed));
+	this.position.add(this.direction.mul(this.speed*gameLogics.bonuses.speedDecrease.value));
 
 	gameLogics.enemies.placed[this.id] = this;
 }
