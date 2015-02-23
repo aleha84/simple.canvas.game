@@ -29,12 +29,14 @@ var gameLogics = {
 		level: 1,
 		hitPowerModifier: 1,
 		spreadAngleIncreaseModifier: 1,
+		fireRateModifier: 1
 	},
 	difficultySettings:{
 		spreadAngleIncreaseModifierMultiplier: 0.75,
 		hitPowerModifierIncrement: 1.5,
 		healthModifierIncrement: 0.1,
 		speedModifierIncrement: 0.1,
+		fireRateModifierMultiplier: 0.85,
 		maxAmountsIncrement: {
 			soldier: 1,
 			tanks: 0.25,
@@ -45,7 +47,7 @@ var gameLogics = {
 		speedDecrease: {
 			defaultValue: 1,
 			value:1,
-			timeToLive: 5000,
+			timeToLive: 6000,
 			activatedTillTo: new Date,
 		},
 	},
@@ -57,7 +59,7 @@ var gameLogics = {
 		this.enemies.soldier.maxAmount += this.difficultySettings.maxAmountsIncrement.soldier;
 		this.enemies.tanks.maxAmount += this.difficultySettings.maxAmountsIncrement.tanks;
 		this.enemies.robots.maxAmount += this.difficultySettings.maxAmountsIncrement.robots;
-		if(this.difficulty.level%3 == 0)
+		if(this.difficulty.level%2 == 0)
 		{
 			gameLogics.isPaused =true;
 			var $selectBafs = $('<div>', { class: 'bafs', css: {
@@ -66,7 +68,7 @@ var gameLogics = {
 			}});
 			$selectBafs.append($('<div>',{class: 'scatter',text: 'Lower scatter', type: '1'}));
 			$selectBafs.append($('<div>',{class: 'hitPower',text: 'Higher hit power', type: '2'}));
-			$selectBafs.append($('<div>',{class: 'restoreLife',text: 'Restore life', type: '3'}));
+			$selectBafs.append($('<div>',{class: 'fireRate',text: 'Higher fire rate', type: '3'}));
 			$('body').append($selectBafs);
 		}
 	},
@@ -94,12 +96,12 @@ var GO = function(){
 			gameLogics.enemies.soldier.currentAmount--;	
 			tryGetBonus = true;
 		}	
-		if(tryGetBonus && getRandom(0,40) <= 1)
+		if(tryGetBonus && getRandom(0,25) <= 1)
 		{
+			var type = parseInt(getRandom(1,3));
 			go.push(new TimeBonus({
 				position: new Vector2(getRandom(15,battlefield.height-15),getRandom(15,battlefield.width)),
-				bonusType: 1,
-				image: images.ice
+				bonusType: type
 			}));
 		}
 	}

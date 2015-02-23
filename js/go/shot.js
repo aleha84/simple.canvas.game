@@ -49,16 +49,6 @@ Shot.prototype.update = function(){
 
 				gameLogics.enemies.placed[_go].hitted(this.hitPower);
 				break;
-				/*gameLogics.enemies.placed[_go].health-=this.hitPower;
-				if(gameLogics.enemies.placed[_go].health <= 0)
-				{
-					gameLogics.enemies.placed[_go].alive = false;
-					if(gameLogics.enemies.placed[_go] instanceof Enemy){
-						scores.soldiers.count++;
-					}
-					go.push(new Remains({position: new Vector2(gameLogics.enemies.placed[_go].position.x,gameLogics.enemies.placed[_go].position.y)}))
-					break;
-				}*/
 			}
 	    }
 	}

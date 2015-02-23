@@ -5,7 +5,17 @@ var TimeBonus = function(timeBonusProperties) {
 	this.speed = 0;
 	this.position = timeBonusProperties.position;
 	this.bonusType = timeBonusProperties.bonusType;
-	this.img = timeBonusProperties.image;
+	switch(this.bonusType)
+	{
+		case 1:
+			this.img = images.ice;
+			break;
+		case 2:
+			this.img = images.nuclearbomb;
+			break;
+		default:
+			break;
+	}
 	gameLogics.enemies.placed[this.id] = this;
 	this.scale = new Vector2(1,1);
 	this.baseSize = new Vector2(30,30);
@@ -14,9 +24,34 @@ var TimeBonus = function(timeBonusProperties) {
 	this.hitted = function(hitPower){
 		this.setDead();
 		var now = new Date;
-		if(this.bonusType == 1)
+		switch(this.bonusType)
 		{
-			gameLogics.bonuses.speedDecrease.activatedTillTo = scores.bonuses.freeze.active? new Date(+gameLogics.bonuses.speedDecrease.activatedTillTo+gameLogics.bonuses.speedDecrease.timeToLive) :new Date(+now +gameLogics.bonuses.speedDecrease.timeToLive);	
+			case 1:
+				gameLogics.bonuses.speedDecrease.activatedTillTo = scores.bonuses.freeze.active? new Date(+gameLogics.bonuses.speedDecrease.activatedTillTo+gameLogics.bonuses.speedDecrease.timeToLive) :new Date(+now +gameLogics.bonuses.speedDecrease.timeToLive);	
+				break;
+			case 2:
+				go.unshift(new Animated({	
+					totalFrameCount: 81,
+					framesInRow: 9,
+					framesRowsCount: 9,
+					frameChangeDelay: 6,
+					explosionImageType: 1,
+					destinationFrameSize: new Vector2(250,250),
+					sourceFrameSize: new Vector2(100,100),
+					position: new Vector2(this.position.x, this.position.y)
+				}));
+
+				for (var _go in gameLogics.enemies.placed) {
+				    if (gameLogics.enemies.placed.hasOwnProperty(_go)) {
+				        var distance = this.position.distance(gameLogics.enemies.placed[_go].position);
+						if(distance!=undefined && distance  <= 175){
+							gameLogics.enemies.placed[_go].hitted(100);
+						}
+				    }
+				}
+				break;
+			default:
+				break;
 		}
 	}
 	this.getRandomDestination = function(){}

@@ -28,7 +28,8 @@ var src = {
 	explosion: 'content/explosion.png',
 	robot: 'content/robot.png',
 	missile: 'content/missile.png',
-	ice: 'content/ice.png'
+	ice: 'content/ice.png',
+	nuclearbomb: 'content/nuclearbomb.png'
 };
 var images = {
 }
@@ -144,8 +145,7 @@ $(document).on('keypress', function(e){
 	}
 
 	// if(e.charCode == 98)
-	// {
-		
+	// {		
 	// }
 });
 
@@ -161,6 +161,7 @@ $(document).on('click', '.bafs>div', function(e){
 				gameLogics.difficulty.hitPowerModifier+=gameLogics.difficultySettings.hitPowerModifierIncrement;
 				break;
 			case '3':
+				gameLogics.difficulty.fireRateModifier*=gameLogics.difficultySettings.fireRateModifierMultiplier;
 				break;
 			default:
 				break;
@@ -183,7 +184,7 @@ function draw(){
 			}
 
 
-			if((now - shooters[i].lastTimeShoot) > shooters[i].shootDelay){
+			if((now - shooters[i].lastTimeShoot) > shooters[i].shootDelay*gameLogics.difficulty.fireRateModifier){
 				var pos = new Vector2(shooters[i].position.x,shooters[i].position.y);
 				var spreadAngle = getRandom(-1*shooters[i].spread.currentSpread,shooters[i].spread.currentSpread);
 				var dir = pos.direction(new Vector2(mousestate.position.x,mousestate.position.y)).rotate(spreadAngle);
