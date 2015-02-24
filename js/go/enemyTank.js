@@ -7,7 +7,7 @@ var EnemyTank = function(enemyTankProperties){
 	this.maxHealth = 10*gameLogics.difficulty.healthModifier;
 	this.scores = 25;
 	this.currentFrame = 0;
-
+	this.damage = 5;
 	this.hitted = function(hitPower){
 		this.health-=hitPower;
 
@@ -51,7 +51,10 @@ EnemyTank.prototype.render = function(){
 EnemyTank.prototype.update = function(){
 	delete gameLogics.enemies.placed[this.id];
 	if(this.position.x <= 0 || this.position.y <= 0 || this.position.x > battlefield.width || this.position.y > battlefield.height){
-		//this.alive = false;
+		if(this.position.y > battlefield.height)
+		{
+			gameLogics.hitPoints.current-=this.damage;
+		}
 		this.setDead();
 	}
 

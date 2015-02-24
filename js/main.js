@@ -29,7 +29,8 @@ var src = {
 	robot: 'content/robot.png',
 	missile: 'content/missile.png',
 	ice: 'content/ice.png',
-	nuclearbomb: 'content/nuclearbomb.png'
+	nuclearbomb: 'content/nuclearbomb.png',
+	gameover:'content/gameover.png'
 };
 var images = {
 }
@@ -218,8 +219,7 @@ function draw(){
 	}
 
 	context.drawImage(images.background,0,0,battlefield.width,battlefield.height);
-	// context.fillStyle = 'rgb(245,245,245)';
- // 	context.fillRect( 0, 0, battlefield.width, battlefield.height );
+
 	var freezeActiveAmount = now - gameLogics.bonuses.speedDecrease.activatedTillTo;
 	scores.bonuses.freeze.active = freezeActiveAmount < 0;
 
@@ -244,7 +244,7 @@ function draw(){
 
  	var i = go.length;
 	while (i--) {
-		if(!gameLogics.isPaused)
+		if(!gameLogics.isPaused && !gameLogics.gameOver)
 		{
 			go[i].update();
 		}
@@ -278,6 +278,17 @@ function draw(){
 	}
 
 	scores.difficulty.levelEl.html(gameLogics.difficulty.level);
+
+	drawHealthBar();
+	if(gameLogics.hitPoints.current > 0)
+	{
+		gameLogics.regeneration();
+	}
+	else
+	{
+		gameLogics.gameOver = true;
+		drawGameOver();
+	}
 }
 
 function loadImages(sources, callback) {
@@ -296,5 +307,48 @@ function loadImages(sources, callback) {
         }
       };
       images[src].src = sources[src];
+    }
+  }
+
+  function drawHealthBar(){
+  	context.save();
+  	var hpBarHeight = battlefield.height-40;
+  	roundRect(battlefield.width - 10,10,5,hpBarHeight,5,'#F00','#0F0');
+  	if(gameLogics.hitPoints.current > 0)
+  	{
+  		var currentHeight = hpBarHeight*gameLogics.hitPoints.current/100;
+  	  	roundRect(battlefield.width - 9,11+hpBarHeight - currentHeight -2,3,currentHeight,0,'#0F0',undefined);
+  	}
+  	context.restore();
+  }
+
+  function drawGameOver() {
+  	if(this.opacity == undefined)
+  	{
+  		this.opacity = 0;
+  		this.opacityIncrement = 0.01;
+  		this.animation = new Animated({	
+				totalFrameCount: 10,
+				framesInRow: 5,
+				framesRowsCount: 2,
+				frameChangeDelay: 20,
+				explosionImageType: 2,
+				destinationFrameSize: new Vector2(180,247.5),
+				sourceFrameSize: new Vector2(180,247.5),
+				position: new Vector2(100,100),
+				loop: true
+			})
+  	}
+
+  	context.beginPath();
+    context.rect(0, 0, battlefield.width, battlefield.height);
+    context.fillStyle = 'rgba(225,225,225,'+this.opacity+')';
+    context.fill();
+    this.opacity+=this.opacityIncrement;
+    if(this.opacity > 0.5)
+    {
+    	this.opacity = 0.5;
+    	this.animation.render();
+    	this.animation.update();
     }
   }

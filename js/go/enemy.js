@@ -10,10 +10,11 @@ var Enemy = function(enemyProperties){
 	this.destination = undefined;
 	this.lastTimeGetRandomDestination = (new Date - 2000);
 	this.scores = 5;
+	this.damage = 2;
 	this.getRandomDestination = function(){
 		var now = new Date;
 		if(now - this.lastTimeGetRandomDestination > gameLogics.getRandomDestinationDelay){
-			this.destination = getRandomDestination({min:this.position.y,max:battlefield.height + 20},{min:12,max:battlefield.width-12})
+			this.destination = getRandomDestination({min:this.position.y,max:battlefield.height + 40},{min:12,max:battlefield.width-12})
 			this.direction = this.position.direction(this.destination);	
 			this.lastTimeGetRandomDestination = now;
 		}
@@ -77,6 +78,10 @@ Enemy.prototype.render = function(){
 Enemy.prototype.update = function(){
 	delete gameLogics.enemies.placed[this.id];
 	if(this.position.x <= 0 || this.position.y <= 0 || this.position.x > battlefield.width || this.position.y > battlefield.height){
+		if(this.position.y > battlefield.height)
+		{
+			gameLogics.hitPoints.current-=this.damage;
+		}
 		this.setDead();
 	}
 

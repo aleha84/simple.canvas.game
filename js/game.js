@@ -6,6 +6,7 @@ var battlefield = {
 var scores = undefined;
 
 var gameLogics = {
+	gameOver: false,
 	enemies: {
 		soldier: {
 			currentAmount: 0,
@@ -29,7 +30,8 @@ var gameLogics = {
 		level: 1,
 		hitPowerModifier: 1,
 		spreadAngleIncreaseModifier: 1,
-		fireRateModifier: 1
+		fireRateModifier: 1,
+		hitPointsRegenerationModifier: 1,
 	},
 	difficultySettings:{
 		spreadAngleIncreaseModifierMultiplier: 0.75,
@@ -37,6 +39,7 @@ var gameLogics = {
 		healthModifierIncrement: 0.1,
 		speedModifierIncrement: 0.1,
 		fireRateModifierMultiplier: 0.85,
+		hitPointsRegenerationModifierMultiplier: 1.1,
 		maxAmountsIncrement: {
 			soldier: 1,
 			tanks: 0.25,
@@ -50,6 +53,25 @@ var gameLogics = {
 			timeToLive: 6000,
 			activatedTillTo: new Date,
 		},
+	},
+	hitPoints: {
+		current: 100,
+		maximum: 100,
+		regenerationTimeout:4000,
+		lastTimeRegeneration: new Date,
+	},
+	regeneration: function(){
+		var now = new Date;
+		if(now - this.hitPoints.lastTimeRegeneration > this.hitPoints.regenerationTimeout)
+		{
+			this.hitPoints.lastTimeRegeneration = now;
+			this.hitPoints.current+=1*this.difficulty.hitPointsRegenerationModifier;
+			if(this.hitPoints.current > this.hitPoints.maximum)
+			{
+				this.hitPoints.current = this.hitPoints.maximum	
+			}
+		}
+		
 	},
 	nextLevel: function(){
 		this.difficulty.level++;

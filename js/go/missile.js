@@ -14,6 +14,7 @@ var Missile = function(missileProperties){
 	this.scores = 10;
 	this.width = 9;
 	this.height = 29;
+	this.damage = 10;
 	var destinationVector = new Vector2(this.destination.x - this.position.x, this.destination.y - this.position.y);
 	var centralVector = new Vector2(0, -1);
 	var radians = Math.acos((destinationVector.mulVector(centralVector))/destinationVector.module()*centralVector.module());
@@ -64,6 +65,10 @@ Missile.prototype.render = function(){
 Missile.prototype.update = function(){
 	delete gameLogics.enemies.placed[this.id];
 	if(this.position.x <= 0 || this.position.y <= 0 || this.position.x > battlefield.width || this.position.y > battlefield.height){
+		if(this.position.y > battlefield.height)
+		{
+			gameLogics.hitPoints.current-=this.damage;
+		}
 		this.setDead();
 	}
 
