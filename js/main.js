@@ -30,7 +30,8 @@ var src = {
 	missile: 'content/missile.png',
 	ice: 'content/ice.png',
 	nuclearbomb: 'content/nuclearbomb.png',
-	gameover:'content/gameover.png'
+	gameover:'content/gameover.png',
+	restorehp:'content/restore_hp.png',
 };
 var images = {
 }
@@ -280,7 +281,7 @@ function draw(){
 	scores.difficulty.levelEl.html(gameLogics.difficulty.level);
 
 	drawHealthBar();
-	if(gameLogics.hitPoints.current > 0)
+	if(gameLogics.hitPoints.current > 0) //regeneration
 	{
 		gameLogics.regeneration();
 	}

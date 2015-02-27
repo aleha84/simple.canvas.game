@@ -13,6 +13,9 @@ var TimeBonus = function(timeBonusProperties) {
 		case 2:
 			this.img = images.nuclearbomb;
 			break;
+		case 3:
+			this.img = images.restorehp;
+			break;
 		default:
 			break;
 	}
@@ -48,6 +51,13 @@ var TimeBonus = function(timeBonusProperties) {
 							gameLogics.enemies.placed[_go].hitted(100);
 						}
 				    }
+				}
+				break;
+			case 3:
+				gameLogics.hitPoints.current+=10;
+				if(gameLogics.hitPoints.current > gameLogics.hitPoints.maximum)
+				{
+					gameLogics.hitPoints.current = gameLogics.hitPoints.maximum;	
 				}
 				break;
 			default:

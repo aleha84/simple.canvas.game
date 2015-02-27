@@ -120,7 +120,7 @@ var GO = function(){
 		}	
 		if(tryGetBonus && getRandom(0,25) <= 1)
 		{
-			var type = parseInt(getRandom(1,3));
+			var type = parseInt(getRandom(1,4));
 			go.push(new TimeBonus({
 				position: new Vector2(getRandom(15,battlefield.height-15),getRandom(15,battlefield.width)),
 				bonusType: type
