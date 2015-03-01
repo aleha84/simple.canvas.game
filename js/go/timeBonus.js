@@ -30,7 +30,7 @@ var TimeBonus = function(timeBonusProperties) {
 		switch(this.bonusType)
 		{
 			case 1:
-				gameLogics.bonuses.speedDecrease.activatedTillTo = scores.bonuses.freeze.active? new Date(+gameLogics.bonuses.speedDecrease.activatedTillTo+gameLogics.bonuses.speedDecrease.timeToLive) :new Date(+now +gameLogics.bonuses.speedDecrease.timeToLive);	
+				gameLogics.bonuses.speedDecrease.activatedTillTo = scores.bonuses.freeze.active? new Date(+gameLogics.bonuses.speedDecrease.activatedTillTo+(gameLogics.bonuses.speedDecrease.timeToLive*gameLogics.difficulty.bonusesTimeToLiveModifier)) :new Date(+now +(gameLogics.bonuses.speedDecrease.timeToLive*gameLogics.difficulty.bonusesTimeToLiveModifier));	
 				break;
 			case 2:
 				go.unshift(new Animated({	
@@ -82,7 +82,7 @@ TimeBonus.prototype.render = function(){
 TimeBonus.prototype.update = function(){
 	var now = new Date;
 	
-	if(now - this.creationTime > this.dissapearTimeOut)
+	if(now - this.creationTime > this.dissapearTimeOut*gameLogics.difficulty.timeBonusDissapearModifier)
 	{
 		this.setDead();
 	}

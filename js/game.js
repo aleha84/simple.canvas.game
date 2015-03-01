@@ -32,6 +32,8 @@ var gameLogics = {
 		spreadAngleIncreaseModifier: 1,
 		fireRateModifier: 1,
 		hitPointsRegenerationModifier: 1,
+		timeBonusDissapearModifier: 1,
+		bonusesTimeToLiveModifier: 1,
 	},
 	difficultySettings:{
 		spreadAngleIncreaseModifierMultiplier: 0.75,
@@ -40,6 +42,8 @@ var gameLogics = {
 		speedModifierIncrement: 0.1,
 		fireRateModifierMultiplier: 0.85,
 		hitPointsRegenerationModifierMultiplier: 1.1,
+		timeBonusDissapearModifierMultiplier: 1.5,
+		bonusesTimeToLiveModifierIncrement: 0.2,
 		maxAmountsIncrement: {
 			soldier: 1,
 			tanks: 0.25,
@@ -77,7 +81,9 @@ var gameLogics = {
 		var defaultsLevelUps = [
 			{ class: 'scatter', text: '<span>Lower scatter<br/>Current: <b>'+gameLogics.difficulty.spreadAngleIncreaseModifier+'</b><br/>Next: <b>'+(gameLogics.difficulty.spreadAngleIncreaseModifier*gameLogics.difficultySettings.spreadAngleIncreaseModifierMultiplier)+'</b></span>', type: '1'},
 			{ class: 'hitPower', text: '<span>Higher hit power<br/>Current: <b>'+gameLogics.difficulty.hitPowerModifier+'</b><br/>Next: <b>'+(gameLogics.difficulty.hitPowerModifier+gameLogics.difficultySettings.hitPowerModifierIncrement)+'</b></span>', type: '2'},
-			{ class: 'fireRate', text: '<span>Higher fire rate<br/>Current: <b>'+gameLogics.difficulty.fireRateModifier+'</b><br/>Next: <b>'+(gameLogics.difficulty.fireRateModifier*gameLogics.difficultySettings.fireRateModifierMultiplier)+'</b></span>', type: '3'}
+			{ class: 'fireRate', text: '<span>Higher fire rate<br/>Current: <b>'+gameLogics.difficulty.fireRateModifier+'</b><br/>Next: <b>'+(gameLogics.difficulty.fireRateModifier*gameLogics.difficultySettings.fireRateModifierMultiplier)+'</b></span>', type: '3'},
+			{ class: 'timeOutDissapear', text: '<span>Higher bonus dissapear time<br/>Current: <b>'+(3000*gameLogics.difficulty.timeBonusDissapearModifier)+'</b><br/>Next: <b>'+(3000*(gameLogics.difficulty.timeBonusDissapearModifier*gameLogics.difficultySettings.timeBonusDissapearModifierMultiplier))+'</b></span>', type: '4'},
+			{ class: 'bonusTimeToLive', text: '<span>Higher bonus lifetime<br/>Current: <b>'+(6000*gameLogics.difficulty.bonusesTimeToLiveModifier)+'</b><br/>Next: <b>'+(6000*(gameLogics.difficulty.bonusesTimeToLiveModifier+gameLogics.difficultySettings.bonusesTimeToLiveModifierIncrement))+'</b></span>', type: '5'}
 		];
 		this.difficulty.level++;
 		this.difficulty.nextLevelScores = Math.pow(this.difficulty.level,2)*100;

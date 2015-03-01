@@ -30,7 +30,7 @@ var src = {
 	missile: 'content/missile.png',
 	ice: 'content/ice.png',
 	nuclearbomb: 'content/nuclearbomb.png',
-	gameover:'content/gameover.png',
+	gameover:'content/gameover.gif',
 	restorehp:'content/restore_hp.png',
 };
 var images = {
@@ -146,9 +146,13 @@ $(document).on('keypress', function(e){
 		gameLogics.isPaused = !gameLogics.isPaused;
 	}
 
-	// if(e.charCode == 98)
-	// {		
-	// }
+	if(e.charCode == 98)
+	{
+		go.push(new TimeBonus({
+			position: new Vector2(getRandom(15,battlefield.height-15),getRandom(15,battlefield.width)),
+			bonusType: 1
+		}));		
+	}
 });
 
 $(document).on('click', '.bafs>div', function(e){
@@ -164,6 +168,12 @@ $(document).on('click', '.bafs>div', function(e){
 				break;
 			case '3':
 				gameLogics.difficulty.fireRateModifier*=gameLogics.difficultySettings.fireRateModifierMultiplier;
+				break;
+			case '4':
+				gameLogics.difficulty.timeBonusDissapearModifier*=gameLogics.difficultySettings.timeBonusDissapearModifierMultiplier;
+				break;
+			case '5':
+				gameLogics.difficulty.bonusesTimeToLiveModifier+=gameLogics.difficultySettings.bonusesTimeToLiveModifierIncrement
 				break;
 			default:
 				break;
@@ -332,13 +342,13 @@ function loadImages(sources, callback) {
   		this.opacity = 0;
   		this.opacityIncrement = 0.01;
   		this.animation = new Animated({	
-				totalFrameCount: 10,
-				framesInRow: 5,
-				framesRowsCount: 2,
+				totalFrameCount: 60,
+				framesInRow: 10,
+				framesRowsCount: 6,
 				frameChangeDelay: 20,
 				explosionImageType: 2,
-				destinationFrameSize: new Vector2(180,247.5),
-				sourceFrameSize: new Vector2(180,247.5),
+				destinationFrameSize: new Vector2(64,64),
+				sourceFrameSize: new Vector2(64,64),
 				position: new Vector2(100,100),
 				loop: true
 			})
