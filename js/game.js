@@ -74,6 +74,11 @@ var gameLogics = {
 		
 	},
 	nextLevel: function(){
+		var defaultsLevelUps = [
+			{ class: 'scatter', text: '<span>Lower scatter<br/>Current: <b>'+gameLogics.difficulty.spreadAngleIncreaseModifier+'</b><br/>Next: <b>'+(gameLogics.difficulty.spreadAngleIncreaseModifier*gameLogics.difficultySettings.spreadAngleIncreaseModifierMultiplier)+'</b></span>', type: '1'},
+			{ class: 'hitPower', text: '<span>Higher hit power<br/>Current: <b>'+gameLogics.difficulty.hitPowerModifier+'</b><br/>Next: <b>'+(gameLogics.difficulty.hitPowerModifier+gameLogics.difficultySettings.hitPowerModifierIncrement)+'</b></span>', type: '2'},
+			{ class: 'fireRate', text: '<span>Higher fire rate<br/>Current: <b>'+gameLogics.difficulty.fireRateModifier+'</b><br/>Next: <b>'+(gameLogics.difficulty.fireRateModifier*gameLogics.difficultySettings.fireRateModifierMultiplier)+'</b></span>', type: '3'}
+		];
 		this.difficulty.level++;
 		this.difficulty.nextLevelScores = Math.pow(this.difficulty.level,2)*100;
 		this.difficulty.healthModifier +=this.difficultySettings.healthModifierIncrement;
@@ -88,9 +93,20 @@ var gameLogics = {
 				width: battlefield.width + 'px',
 				margin: (battlefield.height /2 - 50) + 'px 0px'
 			}});
-			$selectBafs.append($('<div>',{class: 'scatter',text: 'Lower scatter', type: '1'}));
-			$selectBafs.append($('<div>',{class: 'hitPower',text: 'Higher hit power', type: '2'}));
-			$selectBafs.append($('<div>',{class: 'fireRate',text: 'Higher fire rate', type: '3'}));
+			var currentlevelUps = defaultsLevelUps.slice();
+			for(var i = 0;i<3;i++)
+			{
+				var index = parseInt(getRandom(0,currentlevelUps.length));
+				var levelUp = currentlevelUps.splice(index,1);
+				if(levelUp.length == 1)
+				{
+					$selectBafs.append($('<div>',{class: levelUp[0].class,html: levelUp[0].text, type: levelUp[0].type}));	
+				}
+				
+			}
+			// $selectBafs.append($('<div>',{class: 'scatter',text: 'Lower scatter', type: '1'}));
+			// $selectBafs.append($('<div>',{class: 'hitPower',text: 'Higher hit power', type: '2'}));
+			// $selectBafs.append($('<div>',{class: 'fireRate',text: 'Higher fire rate', type: '3'}));
 			$('body').append($selectBafs);
 		}
 	},

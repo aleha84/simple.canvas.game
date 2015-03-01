@@ -283,7 +283,10 @@ function draw(){
 	drawHealthBar();
 	if(gameLogics.hitPoints.current > 0) //regeneration
 	{
-		gameLogics.regeneration();
+		if(!gameLogics.isPaused && !gameLogics.gameOver)
+		{
+			gameLogics.regeneration();
+		}
 	}
 	else
 	{

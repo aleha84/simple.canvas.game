@@ -55,6 +55,13 @@ body {
     user-select: none;
 }
 
+.bafs > div>span
+{
+	display: inline-block;
+	vertical-align: middle;
+	line-height: 17px;
+}
+
 .bafs > div:hover{
     background-color: lightgreen;
     text-weight: bold;
