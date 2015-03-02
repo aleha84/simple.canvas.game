@@ -34,6 +34,8 @@ var gameLogics = {
 		hitPointsRegenerationModifier: 1,
 		timeBonusDissapearModifier: 1,
 		bonusesTimeToLiveModifier: 1,
+		damageAbsorbtionModifier: 1,
+		regenerationTimeoutModifier: 1,
 	},
 	difficultySettings:{
 		spreadAngleIncreaseModifierMultiplier: 0.75,
@@ -44,6 +46,8 @@ var gameLogics = {
 		hitPointsRegenerationModifierMultiplier: 1.1,
 		timeBonusDissapearModifierMultiplier: 1.5,
 		bonusesTimeToLiveModifierIncrement: 0.2,
+		damageAbsorbtionModifierMultiplier: 0.9,
+		regenerationTimeoutModifierMultiplier: 0.9,
 		maxAmountsIncrement: {
 			soldier: 1,
 			tanks: 0.25,
@@ -57,6 +61,10 @@ var gameLogics = {
 			timeToLive: 6000,
 			activatedTillTo: new Date,
 		},
+		superShot:{
+			timeToLive: 3000,
+			activatedTillTo: new Date,	
+		}
 	},
 	hitPoints: {
 		current: 100,
@@ -66,7 +74,7 @@ var gameLogics = {
 	},
 	regeneration: function(){
 		var now = new Date;
-		if(now - this.hitPoints.lastTimeRegeneration > this.hitPoints.regenerationTimeout)
+		if(now - this.hitPoints.lastTimeRegeneration > this.hitPoints.regenerationTimeout*this.difficulty.regenerationTimeoutModifier)
 		{
 			this.hitPoints.lastTimeRegeneration = now;
 			this.hitPoints.current+=1*this.difficulty.hitPointsRegenerationModifier;
@@ -83,7 +91,12 @@ var gameLogics = {
 			{ class: 'hitPower', text: '<span>Higher hit power<br/>Current: <b>'+gameLogics.difficulty.hitPowerModifier+'</b><br/>Next: <b>'+(gameLogics.difficulty.hitPowerModifier+gameLogics.difficultySettings.hitPowerModifierIncrement)+'</b></span>', type: '2'},
 			{ class: 'fireRate', text: '<span>Higher fire rate<br/>Current: <b>'+gameLogics.difficulty.fireRateModifier+'</b><br/>Next: <b>'+(gameLogics.difficulty.fireRateModifier*gameLogics.difficultySettings.fireRateModifierMultiplier)+'</b></span>', type: '3'},
 			{ class: 'timeOutDissapear', text: '<span>Higher bonus dissapear time<br/>Current: <b>'+(3000*gameLogics.difficulty.timeBonusDissapearModifier)+'</b><br/>Next: <b>'+(3000*(gameLogics.difficulty.timeBonusDissapearModifier*gameLogics.difficultySettings.timeBonusDissapearModifierMultiplier))+'</b></span>', type: '4'},
-			{ class: 'bonusTimeToLive', text: '<span>Higher bonus lifetime<br/>Current: <b>'+(6000*gameLogics.difficulty.bonusesTimeToLiveModifier)+'</b><br/>Next: <b>'+(6000*(gameLogics.difficulty.bonusesTimeToLiveModifier+gameLogics.difficultySettings.bonusesTimeToLiveModifierIncrement))+'</b></span>', type: '5'}
+			{ class: 'bonusTimeToLive', text: '<span>Higher bonus lifetime<br/>Current: <b>'+(6000*gameLogics.difficulty.bonusesTimeToLiveModifier)+'</b><br/>Next: <b>'+(6000*(gameLogics.difficulty.bonusesTimeToLiveModifier+gameLogics.difficultySettings.bonusesTimeToLiveModifierIncrement))+'</b></span>', type: '5'},
+			{ class: 'restoreLife', text: '<span>Restore hit points</span>', type: '6'},
+			{ class: 'damageAbsorbtion', text: '<span>Damage absorbtion<br/>Current: <b>'+(gameLogics.difficulty.damageAbsorbtionModifier)+'</b><br/>Next: <b>'+(gameLogics.difficulty.damageAbsorbtionModifier*gameLogics.difficultySettings.damageAbsorbtionModifierMultiplier)+'</b></span>', type: '7'},
+			{ class: 'addShooter', text: '<span>Add shooter<br/>Current: <b>'+(shooters.length)+'</b><br/>Next: <b>'+(shooters.length+1)+'</b></span>', type: '8'},
+			{ class: 'regenTimeOut', text: '<span>Regeneration timeout<br/>Current: <b>'+(gameLogics.hitPoints.regenerationTimeout*gameLogics.difficulty.regenerationTimeoutModifier)+'</b><br/>Next: <b>'+(gameLogics.hitPoints.regenerationTimeout*(gameLogics.difficulty.regenerationTimeoutModifier*gameLogics.difficultySettings.regenerationTimeoutModifierMultiplier))+'</b></span>', type: '9'},
+			{ class: 'regenAmount', text: '<span>Regeneration amount<br/>Current: <b>'+(1*gameLogics.difficulty.hitPointsRegenerationModifier)+'</b><br/>Next: <b>'+(1*gameLogics.difficulty.hitPointsRegenerationModifier*gameLogics.difficultySettings.hitPointsRegenerationModifierMultiplier)+'</b></span>', type: '10'},
 		];
 		this.difficulty.level++;
 		this.difficulty.nextLevelScores = Math.pow(this.difficulty.level,2)*100;
@@ -115,6 +128,48 @@ var gameLogics = {
 			// $selectBafs.append($('<div>',{class: 'fireRate',text: 'Higher fire rate', type: '3'}));
 			$('body').append($selectBafs);
 		}
+	},
+	addShooter: function(){
+		if(shooters.length >= 8)
+		{
+			alert('To many shooters, sorry.');
+			return;
+		}
+		var newPosition = new Vector2(getRandom(15,battlefield.width-15),battlefield.height-20);
+		var isNear = true;
+		while(isNear)
+		{
+			isNear = false;
+			for(var i = 0;i<shooters.length;i++)
+			{
+				if(Math.abs(shooters[i].position.x-newPosition.x) < 40)
+				{
+					isNear = true;
+					newPosition = new Vector2(getRandom(15,battlefield.width-15),battlefield.height-20);
+					break;
+				}
+			}
+		}
+		shooters.push(
+		{
+			position: new Vector2(newPosition.x,battlefield.height-20),
+			lastTimeShoot: new Date(),
+			shootDelay: 400,
+			angle: 0.78539816339745,
+			spread : {
+				spreadIncreaseDate: new Date,
+				spreadIncreaseDelay: 100,
+				currentSpread: 0,
+				maxSpread: 400,
+				maxSpreadAngle: 45,
+			}
+		}
+		);
+
+		go.push(new Shooter({
+    		index: shooters.length-1,
+    		position:new Vector2((shooters[shooters.length-1].position.x),shooters[shooters.length-1].position.y)
+    	}));
 	},
 	getRandomDestinationDelay: 1000,
 	isPaused: false,
@@ -155,7 +210,7 @@ GO.prototype.isAlive = function(){ return this.alive;}
 
 var shooters = [
 	{
-		position: new Vector2(400,580),
+		position: new Vector2(battlefield.width/2,battlefield.height-20),
 		lastTimeShoot: new Date(),
 		shootDelay: 100,
 		angle: 0.78539816339745,
@@ -167,7 +222,7 @@ var shooters = [
 			maxSpreadAngle: 45,
 			//spreadAngleIncrease: 1*gameLogics.difficulty.spreadAngleIncreaseModifier,
 		}
-	}
+	},
 ];
 
 //var shots = [];
@@ -237,6 +292,7 @@ var Shooter = function(shooterPropertis){
 	this.position = shooterPropertis.position;
 	this.angle = 0;
 	this.radius = 12;
+	this.index = shooterPropertis.index;
 }
 
 Shooter.prototype = Object.create(GO.prototype);
@@ -257,5 +313,5 @@ Shooter.prototype.render = function(){
 }
 
 Shooter.prototype.update = function(){
-	this.angle = shooters[0].angle;
+	this.angle = shooters[this.index].angle;
 }

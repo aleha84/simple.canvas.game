@@ -16,6 +16,9 @@ var TimeBonus = function(timeBonusProperties) {
 		case 3:
 			this.img = images.restorehp;
 			break;
+		case 4:
+			this.img = images.supershot;
+			break;
 		default:
 			break;
 	}
@@ -59,6 +62,9 @@ var TimeBonus = function(timeBonusProperties) {
 				{
 					gameLogics.hitPoints.current = gameLogics.hitPoints.maximum;	
 				}
+				break;
+			case 4:
+				gameLogics.bonuses.superShot.activatedTillTo = scores.bonuses.superShot.active? new Date(+gameLogics.bonuses.superShot.activatedTillTo+(gameLogics.bonuses.superShot.timeToLive*gameLogics.difficulty.bonusesTimeToLiveModifier)) :new Date(+now +(gameLogics.bonuses.superShot.timeToLive*gameLogics.difficulty.bonusesTimeToLiveModifier));	
 				break;
 			default:
 				break;

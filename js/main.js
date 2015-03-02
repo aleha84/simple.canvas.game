@@ -32,6 +32,7 @@ var src = {
 	nuclearbomb: 'content/nuclearbomb.png',
 	gameover:'content/gameover.gif',
 	restorehp:'content/restore_hp.png',
+	supershot:'content/supershot.png',
 };
 var images = {
 }
@@ -43,6 +44,12 @@ function animate() {
 }
 
 $(document).ready(function(){
+	//tests
+
+	//gameLogics.difficulty.damageAbsorbtionModifier = 0.5;
+	//gameLogics.addShooter();
+	//gameLogics.addShooter();
+	//tests
 	scores = {
 		soldiers: {
 			count: 0,
@@ -67,15 +74,25 @@ $(document).ready(function(){
 			freeze:{
 				active: false,
 				el: $(".scores>.freeze>.amount")	
+			},
+			superShot:{
+				active: false,
+				el: $(".scores>.superShot>.amount")	
 			}
-			
 		}
 	}
 
 	loadImages(src,function(){
 		canvas = document.getElementById('battlefield');
 	    context = canvas.getContext('2d');
-	    go.push(new Shooter({position:new Vector2((battlefield.width/2),580)}))
+	    for(var i = 0;i<shooters.length;i++)
+	    {
+	    	go.push(new Shooter({
+	    		index: i,
+	    		position:new Vector2((shooters[i].position.x),shooters[i].position.y)
+	    	}));	
+	    }
+	    
 	    animate();
 	});
 
@@ -98,16 +115,19 @@ $(document).on('mousemove touchmove','#battlefield',function(e){
 	var posX = $(this).offset().left, posY = $(this).offset().top;
 	var eventPos = pointerEventToXY(e);
 	mousestate.position = new Vector2(eventPos.x - posX,eventPos.y - posY);
-
-	var mouseVector = new Vector2(mousestate.position.x - shooters[0].position.x, mousestate.position.y - shooters[0].position.y);
-	mousestate.mouseVector = mouseVector;
 	var centralVector = new Vector2(0, -1);
-	var radians = Math.acos((mouseVector.mulVector(centralVector))/mouseVector.module()*centralVector.module());
-	if(mousestate.position.x < shooters[0].position.x){
-		radians*=-1;
+	for(var i = 0;i<shooters.length;i++)
+	{
+		var mouseVector = new Vector2(mousestate.position.x - shooters[i].position.x, mousestate.position.y - shooters[i].position.y);
+		mousestate.mouseVector = mouseVector;
+		
+		var radians = Math.acos((mouseVector.mulVector(centralVector))/mouseVector.module()*centralVector.module());
+		if(mousestate.position.x < shooters[i].position.x){
+			radians*=-1;
+		}
+	
+		shooters[i].angle = radians;
 	}
-
-	shooters[0].angle = radians;
 
 	for (var _go in gameLogics.enemies.placed) {
 	    if (gameLogics.enemies.placed.hasOwnProperty(_go)) {
@@ -137,7 +157,10 @@ $(document).on('mouseup touchend','#battlefield',function(e){
 	//var target = new Vector2(e.pageX - posX,e.pageY - posY);
 	absorbTouchEvent(e);
 	mousestate.leftButtonDown = false;
-	shooters[0].spread.currentSpread = 0;
+	for(var i = 0;i<shooters.length;i++)
+	{
+		shooters[i].spread.currentSpread = 0;
+	}
 });
 
 $(document).on('keypress', function(e){
@@ -150,7 +173,7 @@ $(document).on('keypress', function(e){
 	{
 		go.push(new TimeBonus({
 			position: new Vector2(getRandom(15,battlefield.height-15),getRandom(15,battlefield.width)),
-			bonusType: 1
+			bonusType: 4
 		}));		
 	}
 });
@@ -173,7 +196,22 @@ $(document).on('click', '.bafs>div', function(e){
 				gameLogics.difficulty.timeBonusDissapearModifier*=gameLogics.difficultySettings.timeBonusDissapearModifierMultiplier;
 				break;
 			case '5':
-				gameLogics.difficulty.bonusesTimeToLiveModifier+=gameLogics.difficultySettings.bonusesTimeToLiveModifierIncrement
+				gameLogics.difficulty.bonusesTimeToLiveModifier+=gameLogics.difficultySettings.bonusesTimeToLiveModifierIncrement;
+				break;
+			case '6':
+				gameLogics.hitPoints.current=gameLogics.hitPoints.maximum;
+				break;
+			case '7':
+				gameLogics.difficulty.damageAbsorbtionModifier*=gameLogics.difficultySettings.damageAbsorbtionModifierMultiplier;
+				break;
+			case '8':
+				gameLogics.addShooter();
+				break;
+			case '9':
+				gameLogics.difficulty.regenerationTimeoutModifier*=gameLogics.difficultySettings.regenerationTimeoutModifierMultiplier;
+				break;
+			case '10':
+				gameLogics.difficulty.hitPointsRegenerationModifier*=gameLogics.difficultySettings.hitPointsRegenerationModifierMultiplier
 				break;
 			default:
 				break;
@@ -231,27 +269,7 @@ function draw(){
 
 	context.drawImage(images.background,0,0,battlefield.width,battlefield.height);
 
-	var freezeActiveAmount = now - gameLogics.bonuses.speedDecrease.activatedTillTo;
-	scores.bonuses.freeze.active = freezeActiveAmount < 0;
-
- 	if(scores.bonuses.freeze.active)
- 	{
- 		gameLogics.bonuses.speedDecrease.value = 0.1
- 		if(!scores.bonuses.freeze.el.is(":visible"))
- 		{
- 			scores.bonuses.freeze.el.parent().show();	
- 		}
- 		scores.bonuses.freeze.el.html(parseInt(freezeActiveAmount/-1000));
- 	}
- 	else
- 	{
- 		gameLogics.bonuses.speedDecrease.value = gameLogics.bonuses.speedDecrease.defaultValue;
- 		if(scores.bonuses.freeze.el.is(":visible"))
- 		{
-	 		scores.bonuses.freeze.el.parent().hide();
-	 	}
- 	}
-
+	bonusesWork(now);
 
  	var i = go.length;
 	while (i--) {
@@ -282,7 +300,7 @@ function draw(){
 	scores.robots.el.html(scores.robots.count);
 
 	scores.total.el.html(scores.total.count);
-	$('#debug').html('shots.length = ' + go.length + '<br/>' + 'mousestate: ' + JSON.stringify(mousestate) + '<br/> shooter angle: ' + shooters[0].angle);
+	//$('#debug').html('shots.length = ' + go.length + '<br/>' + 'mousestate: ' + JSON.stringify(mousestate) + '<br/> shooter angle: ' + shooters[0].angle);
 
 	if(scores.total.count > gameLogics.difficulty.nextLevelScores){
 		gameLogics.nextLevel();
@@ -366,3 +384,47 @@ function loadImages(sources, callback) {
     	this.animation.update();
     }
   }
+
+	function bonusesWork(now)
+	{
+		var freezeActiveAmount = now - gameLogics.bonuses.speedDecrease.activatedTillTo;
+		scores.bonuses.freeze.active = freezeActiveAmount < 0;
+
+	 	if(scores.bonuses.freeze.active)
+	 	{
+	 		gameLogics.bonuses.speedDecrease.value = 0.1
+	 		if(!scores.bonuses.freeze.el.is(":visible"))
+	 		{
+	 			scores.bonuses.freeze.el.parent().show();	
+	 		}
+	 		scores.bonuses.freeze.el.html(parseInt(freezeActiveAmount/-1000));
+	 	}
+	 	else
+	 	{
+	 		gameLogics.bonuses.speedDecrease.value = gameLogics.bonuses.speedDecrease.defaultValue;
+	 		if(scores.bonuses.freeze.el.is(":visible"))
+	 		{
+		 		scores.bonuses.freeze.el.parent().hide();
+		 	}
+	 	}
+
+	 	var superShotActiveAmount = now - gameLogics.bonuses.superShot.activatedTillTo;
+		scores.bonuses.superShot.active = superShotActiveAmount < 0;
+
+	 	if(scores.bonuses.superShot.active)
+	 	{
+	 		if(!scores.bonuses.superShot.el.is(":visible"))
+	 		{
+	 			scores.bonuses.superShot.el.parent().show();	
+	 		}
+	 		scores.bonuses.superShot.el.html(parseInt(superShotActiveAmount/-1000));
+	 	}
+	 	else
+	 	{
+	 		if(scores.bonuses.superShot.el.is(":visible"))
+	 		{
+		 		scores.bonuses.superShot.el.parent().hide();
+		 	}
+	 	}
+
+	}

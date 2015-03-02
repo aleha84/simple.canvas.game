@@ -5,7 +5,15 @@ var Shot = function(shotProperties){
 	this.direction = shotProperties.direction;
 	this.position = shotProperties.position;
 	this.hitPower = 1*gameLogics.difficulty.hitPowerModifier;
-	//this.timeToLive = shotProperties.timeToLive;
+	this.strokeColor = '#ff0000';
+	this.superShot = scores.bonuses.superShot.active;
+	if(this.superShot)
+	{
+		this.strokeColor = 'yellow';
+		this.hitPower = 100;
+		this.speed = 15;
+	}
+
 }
 Shot.prototype = Object.create(GO.prototype);
 Shot.prototype.render = function(){
@@ -15,7 +23,7 @@ Shot.prototype.render = function(){
 	}
 	context.beginPath();
 	context.lineWidth = 3;
-	context.strokeStyle = '#ff0000';
+	context.strokeStyle = this.strokeColor;
     context.moveTo(this.position.x, this.position.y);
     context.lineTo(this.position.x - (this.direction.x*this.length), this.position.y - (this.direction.y*this.length));
 	context.stroke();
@@ -34,7 +42,10 @@ Shot.prototype.update = function(){
 	    if (gameLogics.enemies.placed.hasOwnProperty(_go)) {
 	        var distance = this.position.distance(gameLogics.enemies.placed[_go].position);
 			if(distance!=undefined && distance  <= gameLogics.enemies.placed[_go].radius){
-				this.alive = false;
+				if(!this.superShot)
+				{
+					this.alive = false;
+				}
 
 				go.unshift(new Animated({	
 					totalFrameCount: 81,
