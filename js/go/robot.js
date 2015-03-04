@@ -2,7 +2,7 @@ var EnemyRobot = function(enemyRobotProperties){
 	Enemy.call(this,enemyRobotProperties);
 	this.id = 'enemyRobot' + (EnemyRobot.counter++);
 	this.radius = 16;
-	this.speed = 0.15*gameLogics.difficulty.speedModifier;
+	this.speed = 0.10*gameLogics.difficulty.speedModifier;
 	this.health = 20*gameLogics.difficulty.healthModifier;
 	this.maxHealth = 20*gameLogics.difficulty.healthModifier;
 	this.destination = enemyRobotProperties.destination;
@@ -76,6 +76,7 @@ EnemyRobot.prototype.update = function(){
 		this.destination = undefined;
 		this.direction = new Vector2;
 		this.speed = 0;
+		this.lastTimeMissleLaunch = new Date;
 	}
 
 	if(!this.destination){

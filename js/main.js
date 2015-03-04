@@ -166,7 +166,17 @@ $(document).on('mouseup touchend','#battlefield',function(e){
 $(document).on('keypress', function(e){
 	if(e.charCode == 32)
 	{
+		var now = new Date;
 		gameLogics.isPaused = !gameLogics.isPaused;
+		if(gameLogics.isPaused)
+		{
+			gameLogics.bonuses.speedDecrease.tillTo = gameLogics.bonuses.speedDecrease.activatedTillTo - now;
+			gameLogics.bonuses.superShot.tillTo = gameLogics.bonuses.superShot.activatedTillTo - now;
+		}
+		else{
+			gameLogics.bonuses.speedDecrease.activatedTillTo = new Date(+now +gameLogics.bonuses.speedDecrease.tillTo);
+			gameLogics.bonuses.superShot.activatedTillTo = new Date(+now +gameLogics.bonuses.superShot.tillTo);
+		}
 	}
 
 	if(e.charCode == 98)
@@ -387,7 +397,7 @@ function loadImages(sources, callback) {
 
 	function bonusesWork(now)
 	{
-		var freezeActiveAmount = now - gameLogics.bonuses.speedDecrease.activatedTillTo;
+		var freezeActiveAmount = now - (gameLogics.isPaused? new Date(+now +gameLogics.bonuses.speedDecrease.tillTo): gameLogics.bonuses.speedDecrease.activatedTillTo);
 		scores.bonuses.freeze.active = freezeActiveAmount < 0;
 
 	 	if(scores.bonuses.freeze.active)
@@ -408,7 +418,7 @@ function loadImages(sources, callback) {
 		 	}
 	 	}
 
-	 	var superShotActiveAmount = now - gameLogics.bonuses.superShot.activatedTillTo;
+	 	var superShotActiveAmount = now - (gameLogics.isPaused? new Date(+now +gameLogics.bonuses.superShot.tillTo): gameLogics.bonuses.superShot.activatedTillTo);//gameLogics.bonuses.superShot.activatedTillTo;
 		scores.bonuses.superShot.active = superShotActiveAmount < 0;
 
 	 	if(scores.bonuses.superShot.active)

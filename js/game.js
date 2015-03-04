@@ -60,10 +60,12 @@ var gameLogics = {
 			value:1,
 			timeToLive: 6000,
 			activatedTillTo: new Date,
+			tillEnd: 0,
 		},
 		superShot:{
 			timeToLive: 3000,
 			activatedTillTo: new Date,	
+			tillEnd: 0,
 		}
 	},
 	hitPoints: {
@@ -197,7 +199,7 @@ var GO = function(){
 		}	
 		if(tryGetBonus && getRandom(0,25) <= 1)
 		{
-			var type = parseInt(getRandom(1,4));
+			var type = parseInt(getRandom(1,5));
 			go.push(new TimeBonus({
 				position: new Vector2(getRandom(15,battlefield.height-15),getRandom(15,battlefield.width)),
 				bonusType: type
