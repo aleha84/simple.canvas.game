@@ -80,7 +80,8 @@ Enemy.prototype.update = function(){
 	if(this.position.x <= 0 || this.position.y <= 0 || this.position.x > battlefield.width || this.position.y > battlefield.height){
 		if(this.position.y > battlefield.height)
 		{
-			gameLogics.hitPoints.current-=(this.damage*gameLogics.difficulty.damageAbsorbtionModifier);
+			if(!scores.bonuses.invulnerability.active)
+			{gameLogics.hitPoints.current-=(this.damage*gameLogics.difficulty.damageAbsorbtionModifier);}
 		}
 		this.setDead();
 	}

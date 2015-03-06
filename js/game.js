@@ -36,6 +36,7 @@ var gameLogics = {
 		bonusesTimeToLiveModifier: 1,
 		damageAbsorbtionModifier: 1,
 		regenerationTimeoutModifier: 1,
+		shotSpeedModifier: 1,
 	},
 	difficultySettings:{
 		spreadAngleIncreaseModifierMultiplier: 0.75,
@@ -48,6 +49,7 @@ var gameLogics = {
 		bonusesTimeToLiveModifierIncrement: 0.2,
 		damageAbsorbtionModifierMultiplier: 0.9,
 		regenerationTimeoutModifierMultiplier: 0.9,
+		shotSpeedModifierIncrement: 0.1,
 		maxAmountsIncrement: {
 			soldier: 1,
 			tanks: 0.25,
@@ -64,6 +66,11 @@ var gameLogics = {
 		},
 		superShot:{
 			timeToLive: 3000,
+			activatedTillTo: new Date,	
+			tillEnd: 0,
+		},
+		invulnerability:{
+			timeToLive: 5000,
 			activatedTillTo: new Date,	
 			tillEnd: 0,
 		}
@@ -89,16 +96,17 @@ var gameLogics = {
 	},
 	nextLevel: function(){
 		var defaultsLevelUps = [
-			{ class: 'scatter', text: '<span>Lower scatter<br/>Current: <b>'+gameLogics.difficulty.spreadAngleIncreaseModifier+'</b><br/>Next: <b>'+(gameLogics.difficulty.spreadAngleIncreaseModifier*gameLogics.difficultySettings.spreadAngleIncreaseModifierMultiplier)+'</b></span>', type: '1'},
-			{ class: 'hitPower', text: '<span>Higher hit power<br/>Current: <b>'+gameLogics.difficulty.hitPowerModifier+'</b><br/>Next: <b>'+(gameLogics.difficulty.hitPowerModifier+gameLogics.difficultySettings.hitPowerModifierIncrement)+'</b></span>', type: '2'},
-			{ class: 'fireRate', text: '<span>Higher fire rate<br/>Current: <b>'+gameLogics.difficulty.fireRateModifier+'</b><br/>Next: <b>'+(gameLogics.difficulty.fireRateModifier*gameLogics.difficultySettings.fireRateModifierMultiplier)+'</b></span>', type: '3'},
-			{ class: 'timeOutDissapear', text: '<span>Higher bonus dissapear time<br/>Current: <b>'+(3000*gameLogics.difficulty.timeBonusDissapearModifier)+'</b><br/>Next: <b>'+(3000*(gameLogics.difficulty.timeBonusDissapearModifier*gameLogics.difficultySettings.timeBonusDissapearModifierMultiplier))+'</b></span>', type: '4'},
-			{ class: 'bonusTimeToLive', text: '<span>Higher bonus lifetime<br/>Current: <b>'+(6000*gameLogics.difficulty.bonusesTimeToLiveModifier)+'</b><br/>Next: <b>'+(6000*(gameLogics.difficulty.bonusesTimeToLiveModifier+gameLogics.difficultySettings.bonusesTimeToLiveModifierIncrement))+'</b></span>', type: '5'},
+			{ class: 'scatter', text: '<span>Lower scatter<br/>Current: <b>'+gameLogics.difficulty.spreadAngleIncreaseModifier.toFixed(2)+'</b><br/>Next: <b>'+(gameLogics.difficulty.spreadAngleIncreaseModifier*gameLogics.difficultySettings.spreadAngleIncreaseModifierMultiplier).toFixed(2)+'</b></span>', type: '1'},
+			{ class: 'hitPower', text: '<span>Higher hit power<br/>Current: <b>'+gameLogics.difficulty.hitPowerModifier.toFixed(2)+'</b><br/>Next: <b>'+(gameLogics.difficulty.hitPowerModifier+gameLogics.difficultySettings.hitPowerModifierIncrement).toFixed(2)+'</b></span>', type: '2'},
+			{ class: 'fireRate', text: '<span>Higher fire rate<br/>Current: <b>'+gameLogics.difficulty.fireRateModifier.toFixed(2)+'</b><br/>Next: <b>'+(gameLogics.difficulty.fireRateModifier*gameLogics.difficultySettings.fireRateModifierMultiplier).toFixed(2)+'</b></span>', type: '3'},
+			{ class: 'timeOutDissapear', text: '<span>Higher bonus dissapear time<br/>Current: <b>'+(3000*gameLogics.difficulty.timeBonusDissapearModifier).toFixed(2)+'</b><br/>Next: <b>'+(3000*(gameLogics.difficulty.timeBonusDissapearModifier*gameLogics.difficultySettings.timeBonusDissapearModifierMultiplier)).toFixed(2)+'</b></span>', type: '4'},
+			{ class: 'bonusTimeToLive', text: '<span>Higher bonus lifetime modifier<br/>Current: <b>'+(gameLogics.difficulty.bonusesTimeToLiveModifier).toFixed(2)+'</b><br/>Next: <b>'+((gameLogics.difficulty.bonusesTimeToLiveModifier+gameLogics.difficultySettings.bonusesTimeToLiveModifierIncrement)).toFixed(2)+'</b></span>', type: '5'},
 			{ class: 'restoreLife', text: '<span>Restore hit points</span>', type: '6'},
-			{ class: 'damageAbsorbtion', text: '<span>Damage absorbtion<br/>Current: <b>'+(gameLogics.difficulty.damageAbsorbtionModifier)+'</b><br/>Next: <b>'+(gameLogics.difficulty.damageAbsorbtionModifier*gameLogics.difficultySettings.damageAbsorbtionModifierMultiplier)+'</b></span>', type: '7'},
+			{ class: 'damageAbsorbtion', text: '<span>Damage absorbtion<br/>Current: <b>'+(gameLogics.difficulty.damageAbsorbtionModifier).toFixed(2)+'</b><br/>Next: <b>'+(gameLogics.difficulty.damageAbsorbtionModifier*gameLogics.difficultySettings.damageAbsorbtionModifierMultiplier).toFixed(2)+'</b></span>', type: '7'},
 			{ class: 'addShooter', text: '<span>Add shooter<br/>Current: <b>'+(shooters.length)+'</b><br/>Next: <b>'+(shooters.length+1)+'</b></span>', type: '8'},
-			{ class: 'regenTimeOut', text: '<span>Regeneration timeout<br/>Current: <b>'+(gameLogics.hitPoints.regenerationTimeout*gameLogics.difficulty.regenerationTimeoutModifier)+'</b><br/>Next: <b>'+(gameLogics.hitPoints.regenerationTimeout*(gameLogics.difficulty.regenerationTimeoutModifier*gameLogics.difficultySettings.regenerationTimeoutModifierMultiplier))+'</b></span>', type: '9'},
-			{ class: 'regenAmount', text: '<span>Regeneration amount<br/>Current: <b>'+(1*gameLogics.difficulty.hitPointsRegenerationModifier)+'</b><br/>Next: <b>'+(1*gameLogics.difficulty.hitPointsRegenerationModifier*gameLogics.difficultySettings.hitPointsRegenerationModifierMultiplier)+'</b></span>', type: '10'},
+			{ class: 'regenTimeOut', text: '<span>Regeneration timeout<br/>Current: <b>'+(gameLogics.hitPoints.regenerationTimeout*gameLogics.difficulty.regenerationTimeoutModifier).toFixed(2)+'</b><br/>Next: <b>'+(gameLogics.hitPoints.regenerationTimeout*(gameLogics.difficulty.regenerationTimeoutModifier*gameLogics.difficultySettings.regenerationTimeoutModifierMultiplier)).toFixed(2)+'</b></span>', type: '9'},
+			{ class: 'regenAmount', text: '<span>Regeneration amount<br/>Current: <b>'+(1*gameLogics.difficulty.hitPointsRegenerationModifier).toFixed(2)+'</b><br/>Next: <b>'+(1*gameLogics.difficulty.hitPointsRegenerationModifier*gameLogics.difficultySettings.hitPointsRegenerationModifierMultiplier).toFixed(2)+'</b></span>', type: '10'},
+			{ class: 'shotSpeed', text: '<span>Increase shot speed<br/>Current: <b>'+(10*gameLogics.difficulty.shotSpeedModifier).toFixed(2)+'</b><br/>Next: <b>'+(10*(gameLogics.difficulty.shotSpeedModifier+gameLogics.difficultySettings.shotSpeedModifierIncrement).toFixed(2)+'</b></span>', type: '11'},
 		];
 		this.difficulty.level++;
 		this.difficulty.nextLevelScores = Math.pow(this.difficulty.level,2)*100;
@@ -199,7 +207,7 @@ var GO = function(){
 		}	
 		if(tryGetBonus && getRandom(0,25) <= 1)
 		{
-			var type = parseInt(getRandom(1,5));
+			var type = parseInt(getRandom(1,6));
 			go.push(new TimeBonus({
 				position: new Vector2(getRandom(15,battlefield.height-15),getRandom(15,battlefield.width)),
 				bonusType: type
@@ -304,6 +312,10 @@ Shooter.prototype.render = function(){
     context.translate(this.position.x,this.position.y);
     context.rotate(this.angle);
 	context.drawImage(images.gun, -this.radius, -this.radius);
+	if(scores.bonuses.invulnerability.active)
+	{
+		context.drawImage(images.shield, -this.radius, -this.radius);
+	}
     context.restore();
 
 

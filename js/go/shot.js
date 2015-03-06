@@ -1,7 +1,7 @@
 var Shot = function(shotProperties){
 	GO.call(this);
 	this.length = 10;
-	this.speed = 10;
+	this.speed = 10*gameLogics.difficulty.shotSpeedModifier;
 	this.direction = shotProperties.direction;
 	this.position = shotProperties.position;
 	this.hitPower = 1*gameLogics.difficulty.hitPowerModifier;
@@ -11,7 +11,7 @@ var Shot = function(shotProperties){
 	{
 		this.strokeColor = 'yellow';
 		this.hitPower = 100;
-		this.speed = 15;
+		this.speed = 17;
 	}
 
 }

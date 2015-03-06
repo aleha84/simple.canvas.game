@@ -33,6 +33,8 @@ var src = {
 	gameover:'content/gameover.gif',
 	restorehp:'content/restore_hp.png',
 	supershot:'content/supershot.png',
+	invulnerability: 'content/invulnerability.png',
+	shield: 'content/shield.png',
 };
 var images = {
 }
@@ -78,7 +80,12 @@ $(document).ready(function(){
 			superShot:{
 				active: false,
 				el: $(".scores>.superShot>.amount")	
+			},
+			invulnerability:{
+				active: false,
+				el: $(".scores>.invulnerability>.amount")	
 			}
+
 		}
 	}
 
@@ -183,7 +190,7 @@ $(document).on('keypress', function(e){
 	{
 		go.push(new TimeBonus({
 			position: new Vector2(getRandom(15,battlefield.height-15),getRandom(15,battlefield.width)),
-			bonusType: 4
+			bonusType: 5
 		}));		
 	}
 });
@@ -223,6 +230,10 @@ $(document).on('click', '.bafs>div', function(e){
 			case '10':
 				gameLogics.difficulty.hitPointsRegenerationModifier*=gameLogics.difficultySettings.hitPointsRegenerationModifierMultiplier
 				break;
+			case '11':
+				gameLogics.difficulty.shotSpeedModifier+=gameLogics.difficultySettings.shotSpeedModifierIncrement
+				break;
+				
 			default:
 				break;
 		}
@@ -434,6 +445,25 @@ function loadImages(sources, callback) {
 	 		if(scores.bonuses.superShot.el.is(":visible"))
 	 		{
 		 		scores.bonuses.superShot.el.parent().hide();
+		 	}
+	 	}
+
+	 	var invulnerabilityActiveAmount = now - (gameLogics.isPaused? new Date(+now +gameLogics.bonuses.invulnerability.tillTo): gameLogics.bonuses.invulnerability.activatedTillTo);//gameLogics.bonuses.invulnerability.activatedTillTo;
+		scores.bonuses.invulnerability.active = invulnerabilityActiveAmount < 0;
+
+	 	if(scores.bonuses.invulnerability.active)
+	 	{
+	 		if(!scores.bonuses.invulnerability.el.is(":visible"))
+	 		{
+	 			scores.bonuses.invulnerability.el.parent().show();	
+	 		}
+	 		scores.bonuses.invulnerability.el.html(parseInt(invulnerabilityActiveAmount/-1000));
+	 	}
+	 	else
+	 	{
+	 		if(scores.bonuses.invulnerability.el.is(":visible"))
+	 		{
+		 		scores.bonuses.invulnerability.el.parent().hide();
 		 	}
 	 	}
 
