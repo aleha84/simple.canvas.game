@@ -139,7 +139,7 @@ $(document).on('mousemove touchmove','#battlefield',function(e){
 	for (var _go in gameLogics.enemies.placed) {
 	    if (gameLogics.enemies.placed.hasOwnProperty(_go)) {
 	        var distance = mousestate.position.distance(gameLogics.enemies.placed[_go].position);
-			if(distance!=undefined && distance  <= gameLogics.enemies.placed[_go].radius && !(gameLogics.enemies.placed[_go] instanceof EnemyRobot)){
+			if(distance!=undefined && distance  <= gameLogics.enemies.placed[_go].radius && !(gameLogics.enemies.placed[_go] instanceof EnemyRobot) && gameLogics.enemies.placed[_go].getRandomDestination){
 				gameLogics.enemies.placed[_go].getRandomDestination();	
 				break;
 			}

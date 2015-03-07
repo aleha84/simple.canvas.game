@@ -106,7 +106,7 @@ var gameLogics = {
 			{ class: 'addShooter', text: '<span>Add shooter<br/>Current: <b>'+(shooters.length)+'</b><br/>Next: <b>'+(shooters.length+1)+'</b></span>', type: '8'},
 			{ class: 'regenTimeOut', text: '<span>Regeneration timeout<br/>Current: <b>'+(gameLogics.hitPoints.regenerationTimeout*gameLogics.difficulty.regenerationTimeoutModifier).toFixed(2)+'</b><br/>Next: <b>'+(gameLogics.hitPoints.regenerationTimeout*(gameLogics.difficulty.regenerationTimeoutModifier*gameLogics.difficultySettings.regenerationTimeoutModifierMultiplier)).toFixed(2)+'</b></span>', type: '9'},
 			{ class: 'regenAmount', text: '<span>Regeneration amount<br/>Current: <b>'+(1*gameLogics.difficulty.hitPointsRegenerationModifier).toFixed(2)+'</b><br/>Next: <b>'+(1*gameLogics.difficulty.hitPointsRegenerationModifier*gameLogics.difficultySettings.hitPointsRegenerationModifierMultiplier).toFixed(2)+'</b></span>', type: '10'},
-			{ class: 'shotSpeed', text: '<span>Increase shot speed<br/>Current: <b>'+(10*gameLogics.difficulty.shotSpeedModifier).toFixed(2)+'</b><br/>Next: <b>'+(10*(gameLogics.difficulty.shotSpeedModifier+gameLogics.difficultySettings.shotSpeedModifierIncrement).toFixed(2)+'</b></span>', type: '11'},
+			{ class: 'shotSpeed', text: '<span>Increase shot speed<br/>Current: <b>'+(10*gameLogics.difficulty.shotSpeedModifier).toFixed(2)+'</b><br/>Next: <b>'+(10*(gameLogics.difficulty.shotSpeedModifier+gameLogics.difficultySettings.shotSpeedModifierIncrement)).toFixed(2)+'</b></span>', type: '11'},
 		];
 		this.difficulty.level++;
 		this.difficulty.nextLevelScores = Math.pow(this.difficulty.level,2)*100;
